@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -20,11 +21,84 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Ilx-v1-ULR">
+                                <rect key="frame" x="34" y="166" width="307" height="31"/>
+                            </slider>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo app for UAWalkthrough" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vcm-ND-nhA">
+                                <rect key="frame" x="20" y="40" width="335" height="86"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="36"/>
+                                <color key="textColor" red="1" green="0.72007010228874779" blue="0.3094704251809467" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KDu-Gi-sQ3">
+                                <rect key="frame" x="40" y="256" width="102" height="45"/>
+                                <color key="backgroundColor" red="0.90196078430000004" green="0.56470588239999997" blue="0.56470588239999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                                <state key="normal" title="Button 1">
+                                    <color key="titleColor" red="0.14480956923389302" green="0.15968116679589994" blue="0.16771097715736039" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mhg-pE-BfV">
+                                <rect key="frame" x="231" y="256" width="104" height="45"/>
+                                <color key="backgroundColor" red="0.90196078430000004" green="0.56470588239999997" blue="0.56470588239999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                                <state key="normal" title="Button 2">
+                                    <color key="titleColor" red="0.14480956919999999" green="0.1596811668" blue="0.1677109772" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Jw-Ca-R1h">
+                                <rect key="frame" x="135" y="401" width="105" height="45"/>
+                                <color key="backgroundColor" red="0.90196078430000004" green="0.56470588239999997" blue="0.56470588239999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                                <state key="normal" title="Button 3">
+                                    <color key="titleColor" red="0.14480956919999999" green="0.1596811668" blue="0.1677109772" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ImP-qq-bLD">
+                                <rect key="frame" x="40" y="572" width="105" height="45"/>
+                                <color key="backgroundColor" red="0.90196078430000004" green="0.56470588239999997" blue="0.56470588239999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                                <state key="normal" title="Button 4">
+                                    <color key="titleColor" red="0.14480956919999999" green="0.1596811668" blue="0.1677109772" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Vcm-ND-nhA" secondAttribute="trailing" constant="20" id="3C6-aY-pi4"/>
+                            <constraint firstItem="Vcm-ND-nhA" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="20" id="3D1-ub-S77"/>
+                            <constraint firstItem="1Jw-Ca-R1h" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="556-pl-ugd"/>
+                            <constraint firstAttribute="trailing" secondItem="Mhg-pE-BfV" secondAttribute="trailing" constant="40" id="GQV-7e-OUv"/>
+                            <constraint firstItem="ImP-qq-bLD" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="40" id="GnQ-lC-DDl"/>
+                            <constraint firstItem="Ilx-v1-ULR" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="20" id="H7c-Ke-RAF"/>
+                            <constraint firstItem="Vcm-ND-nhA" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="NFH-GF-rKh"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Ilx-v1-ULR" secondAttribute="trailing" constant="20" id="OBy-Gg-M6a"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="KDu-Gi-sQ3" secondAttribute="trailing" constant="20" symbolic="YES" id="PkO-Wy-nWu"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="ImP-qq-bLD" secondAttribute="bottom" constant="50" id="TgF-Nj-ARy"/>
+                            <constraint firstItem="Mhg-pE-BfV" firstAttribute="centerY" secondItem="KDu-Gi-sQ3" secondAttribute="centerY" id="Vp6-Hf-VKx"/>
+                            <constraint firstItem="Ilx-v1-ULR" firstAttribute="top" secondItem="Vcm-ND-nhA" secondAttribute="bottom" constant="40" id="Yw3-tU-WRq"/>
+                            <constraint firstItem="KDu-Gi-sQ3" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="40" id="eMY-Ls-Our"/>
+                            <constraint firstItem="1Jw-Ca-R1h" firstAttribute="top" secondItem="KDu-Gi-sQ3" secondAttribute="bottom" constant="100" id="fSD-df-lVY"/>
+                            <constraint firstItem="KDu-Gi-sQ3" firstAttribute="top" secondItem="Ilx-v1-ULR" secondAttribute="bottom" constant="60" id="oTt-G2-AhQ"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="button1" destination="KDu-Gi-sQ3" id="gZ4-0v-M6a"/>
+                        <outlet property="button2" destination="Mhg-pE-BfV" id="eCW-Ai-AAe"/>
+                        <outlet property="button3" destination="1Jw-Ca-R1h" id="nRe-kZ-Psd"/>
+                        <outlet property="button4" destination="ImP-qq-bLD" id="Wfc-Fz-X5M"/>
+                        <outlet property="slider" destination="Ilx-v1-ULR" id="A0w-QF-LRq"/>
+                        <outlet property="titleLabel" destination="Vcm-ND-nhA" id="ssE-gO-ERG"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="140" y="133.5832083958021"/>
         </scene>
     </scenes>
 </document>

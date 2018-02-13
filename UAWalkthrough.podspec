@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'UAWalkthrough'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of UAWalkthrough.'
+  s.summary          = 'Create an onboarding experience for your app by highlighting and annotating its different elements.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+Quickly onboard users to your app by highlighting important UI elements and create text bubbles with appropriate descriptions. Super easy to implement in your own project.
                        DESC
 
   s.homepage         = 'https://github.com/marhas/UAWalkthrough'
@@ -26,9 +26,9 @@ TODO: Add long description of the pod here.
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'marhas' => 'marcel@unbadapps.com' }
   s.source           = { :git => 'https://github.com/marhas/UAWalkthrough.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.social_media_url = 'https://twitter.com/mhasselaar'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
 
   s.source_files = 'UAWalkthrough/Classes/**/*'
   
