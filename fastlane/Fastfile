@@ -1,0 +1,14 @@
+import_from_git(
+  url: 'git@bitbucket.org:unbadapps/unbadutils.git',
+  path: 'fastlane/Fastfile_shared'
+)
+
+default_platform(:ios)
+
+ENV["podspec"] = "UAWalkthrough.podspec"
+ENV["repo"] = "UnbadPods"
+ENV["xcodeproj"] = "Example/UAWalkthrough.xcodeproj"
+
+platform :ios do
+
+end
