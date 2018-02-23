@@ -27,9 +27,9 @@ Quickly onboard users to your app by highlighting important UI elements and crea
   s.author           = { 'marhas' => 'marcel@unbadapps.com' }
   s.source           = { :git => 'git@bitbucket.org:unbadapps/uawalkthrough.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/mhasselaar'
+  s.swift_version = "4.0"
 
   s.ios.deployment_target = '9.0'
 
   s.source_files = 'UAWalkthrough/Classes/**/*'
-
 end
