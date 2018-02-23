@@ -38,8 +38,8 @@ fastlane ios create_new_version
 Creates a new version of the pod by incrementing the patch, minor or major number of the version number and then commits the changes.
   Defaults to bumping the patch version.
   Use 'type:minor' or 'type:major' to override.
-  Use 'version: x.y.z' if you want to set a fixed version number.
-  Use 'settings: true' if you want to include the settings bundle (if you have one) in the version bump.
+  Use 'version:x.y.z' if you want to set a fixed version number.
+  Use 'settings:true' if you want to include the settings bundle (if you have one) in the version bump.
   
 ### ios push_pod
 ```

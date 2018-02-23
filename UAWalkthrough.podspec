@@ -21,22 +21,15 @@ Pod::Spec.new do |s|
 Quickly onboard users to your app by highlighting important UI elements and create text bubbles with appropriate descriptions. Super easy to implement in your own project.
                        DESC
 
-  s.homepage         = 'https://github.com/marhas/UAWalkthrough'
+  s.homepage         = 'https://bitbucket.org/unbadapps/unbadutils/wiki/Home'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'marhas' => 'marcel@unbadapps.com' }
-  s.source           = { :git => 'https://github.com/marhas/UAWalkthrough.git', :tag => s.version.to_s }
+  s.source           = { :git => 'git@bitbucket.org:unbadapps/uawalkthrough.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/mhasselaar'
 
   s.ios.deployment_target = '9.0'
 
   s.source_files = 'UAWalkthrough/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'UAWalkthrough' => ['UAWalkthrough/Assets/*.png']
-  # }
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end
