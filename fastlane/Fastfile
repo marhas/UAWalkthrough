@@ -1,7 +1,8 @@
-import_from_git(
-  url: 'git@bitbucket.org:unbadapps/unbadutils.git',
-  path: 'fastlane/Fastfile_shared'
-)
+# import_from_git(
+#   url: 'git@bitbucket.org:unbadapps/unbadutils.git',
+#   path: 'fastlane/Fastfile_shared'
+# )
+import "../../UnbadUtils/fastlane/Fastfile_shared"
 
 default_platform(:ios)
 
