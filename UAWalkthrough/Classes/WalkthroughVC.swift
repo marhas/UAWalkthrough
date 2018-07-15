@@ -10,9 +10,30 @@ public protocol WalkthroughController {
     func dismissWalkthrough()
 }
 
-public extension UIViewController {
+public protocol WalkthroughProvider: class {
+    var walkthroughItems: [WalkthroughItem] { get }
+}
+
+public extension WalkthroughProvider {
+    private var userDefaultsKey: String {
+        return String(describing: type(of:self)) + "-WalkthroughCompleted"
+    }
+
+    var hasCompletedWalkthrough: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: userDefaultsKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: userDefaultsKey)
+        }
+    }
+}
+
+public extension WalkthroughProvider where Self: UIViewController {
     @discardableResult
-    public func startWalkthrough(withSettings settings: WalkthroughSettings = WalkthroughSettings(), delegate: WalkthroughDelegate? = nil) -> WalkthroughController {
+    public func startWalkthrough(withSettings settings: WalkthroughSettings = WalkthroughSettings(), delegate: WalkthroughDelegate? = nil, showEvenIfItHasAlreadyBeenCompleted: Bool = false) -> WalkthroughController? {
+        guard !(hasCompletedWalkthrough && !showEvenIfItHasAlreadyBeenCompleted) else { return nil }
+
         let walkthroughVC = WalkthroughVC()
         walkthroughVC.walkthroughSettings = settings
         walkthroughVC.walkthroughDelegate = delegate
@@ -37,9 +58,7 @@ public struct WalkthroughSettings {
 }
 
 public class WalkthroughVC: UIViewController, WalkthroughController {
-
     fileprivate var walkthroughSettings = WalkthroughSettings()
-
     fileprivate var viewCenterXConstraint: NSLayoutConstraint?
     fileprivate var viewCenterYConstraint: NSLayoutConstraint?
     fileprivate var viewHeightConstraint: NSLayoutConstraint?
@@ -57,7 +76,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     static let textBubbleBackgroundColor = UIColor.tooltipBackground
     static let distanceBetweenTextBubbleAndHightlightedArea:CGFloat = 17
     static let textBubbleArrowOverlap = CGFloat(8)
-    
+
     var textBubble: PaddingLabel = {
         let bubblePaddingLabel = PaddingLabel(frame: CGRect(x: 0, y: 0, width: 100, height: 100), insets: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
         bubblePaddingLabel.backgroundColor = textBubbleBackgroundColor
@@ -77,6 +96,13 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     var arrow = WalkthroughVC.createArrowView(size: CGSize(width: 25, height: distanceBetweenTextBubbleAndHightlightedArea + textBubbleArrowOverlap))
     
     let tapGestureRecognizer = UITapGestureRecognizer()
+
+    static public func forgetCompletedWalkthrougs() {
+        let defaults = UserDefaults.standard.dictionaryRepresentation()
+        defaults.map { $0.key }.filter { $0.hasSuffix("-WalkthroughCompleted") }.forEach { userDefaultsKey in
+            UserDefaults.standard.removeObject(forKey: userDefaultsKey)
+        }
+    }
 
     override public func didMove(toParentViewController parent: UIViewController?) {
         super.didMove(toParentViewController: parent)
@@ -246,11 +272,11 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     }
     
     private func activateAllHighlightingConstraints() {
-        NSLayoutConstraint.activate([viewWidthConstraint, viewHeightConstraint, viewCenterXConstraint, viewCenterYConstraint].flatMap { $0 })
+        NSLayoutConstraint.activate([viewWidthConstraint, viewHeightConstraint, viewCenterXConstraint, viewCenterYConstraint].compactMap { $0 })
     }
     
     private func deactivateAllHighlightingConstraints() {
-        NSLayoutConstraint.deactivate([viewWidthConstraint, viewHeightConstraint, viewCenterXConstraint, viewCenterYConstraint].flatMap { $0 })
+        NSLayoutConstraint.deactivate([viewWidthConstraint, viewHeightConstraint, viewCenterXConstraint, viewCenterYConstraint].compactMap { $0 })
     }
 }
 
@@ -270,26 +296,6 @@ public struct WalkthroughItem {
     }
 }
 
-public protocol WalkthroughProvider: class {
-    var walkthroughItems: [WalkthroughItem] { get }
-}
-
-public extension WalkthroughProvider {
-    private var userDefaultsKey: String {
-        return String(describing: type(of:self)) + "-WalkthroughCompleted"
-    }
-
-    var hasCompletedWalkthrough: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: userDefaultsKey)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: userDefaultsKey)
-        }
-    }
-}
-
 public protocol WalkthroughDelegate: class {
     func walkthroughCompleted()
 }
-
