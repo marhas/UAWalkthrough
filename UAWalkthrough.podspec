@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'UAWalkthrough'
-  s.version          = '1.0.5'
+  s.version          = '1.0.4'
   s.summary          = 'Create an onboarding experience for your app by highlighting and annotating its different elements.'
 
 # This description is used to generate tags and improve search results.
@@ -27,7 +27,7 @@ Quickly onboard users to your app by highlighting important UI elements and crea
   s.author           = { 'marhas' => 'marcel@unbadapps.com' }
   s.source           = { :git => 'git@bitbucket.org:unbadapps/uawalkthrough.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/mhasselaar'
-  s.swift_version = "4.0"
+  s.swift_version = "4.2"
 
   s.ios.deployment_target = '9.0'
 
