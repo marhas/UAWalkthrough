@@ -4,7 +4,7 @@
 //
 //  Created by Marcel Hasselaar on 2017-02-02.
 
-import Foundation
+import UIKit
 
 public protocol WalkthroughController {
     func dismissWalkthrough()
@@ -37,8 +37,8 @@ public extension WalkthroughProvider where Self: UIViewController {
         let walkthroughVC = WalkthroughVC()
         walkthroughVC.walkthroughSettings = settings
         walkthroughVC.walkthroughDelegate = delegate
-        addChildViewController(walkthroughVC)
-        walkthroughVC.didMove(toParentViewController: self)
+        addChild(walkthroughVC)
+        walkthroughVC.didMove(toParent: self)
         return walkthroughVC
     }
 }
@@ -104,8 +104,8 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         }
     }
 
-    override public func didMove(toParentViewController parent: UIViewController?) {
-        super.didMove(toParentViewController: parent)
+    override public func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
 
         guard let parentVC = parent else { return }
 
@@ -149,7 +149,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     public func dismissWalkthrough() {
         backgroundDimmingView.removeGestureRecognizer(tapGestureRecognizer)
         backgroundDimmingView.removeFromSuperview()
-        removeFromParentViewController()
+        removeFromParent()
         walkthroughDelegate?.walkthroughCompleted()
     }
 
@@ -212,7 +212,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
 
         if (arrow.superview == nil) {
             backgroundDimmingView.addSubview(arrow)
-            backgroundDimmingView.bringSubview(toFront: textBubble)
+            backgroundDimmingView.bringSubviewToFront(textBubble)
         }
 
         // The rotation of the arrow should happen so that is is not visible. Hence it doesn't even need to be animated, but it is easier to get the timing right that way

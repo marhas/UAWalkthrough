@@ -32,7 +32,7 @@
 
     override public func drawText(in rect: CGRect) {
         let padding = UIEdgeInsets(top: topInset, left: leftInset, bottom: bottomInset, right: rightInset)
-        super.drawText(in: UIEdgeInsetsInsetRect(rect, padding))
+        super.drawText(in: rect.inset(by: padding))
     }
 
     override public var intrinsicContentSize: CGSize {
@@ -40,7 +40,7 @@
 
         let textWidth = frame.size.width - (self.leftInset + self.rightInset)
         let size = CGSize(width: textWidth, height: CGFloat.greatestFiniteMagnitude)
-        let newSize = self.text!.boundingRect(with: size, options: NSStringDrawingOptions.usesLineFragmentOrigin, attributes: [NSAttributedStringKey.font: self.font], context: nil)
+        let newSize = self.text!.boundingRect(with: size, options: NSStringDrawingOptions.usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: self.font], context: nil)
         intrinsicSuperViewContentSize.height = ceil(newSize.size.height) + self.topInset + self.bottomInset
 
         return intrinsicSuperViewContentSize
