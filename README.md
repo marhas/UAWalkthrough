@@ -22,7 +22,7 @@ pod 'UAWalkthrough'
 
 ## Author
 
-Marcel Hasselaar, marcel@unbadapps.com
+marhas, marcel@unbadapps.com
 
 ## License
 
