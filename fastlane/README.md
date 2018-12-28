@@ -25,7 +25,7 @@ Displays the podspec version number.
 ```
 fastlane ios bump_project_version
 ```
-Bumps the project version number. Defaults to bumping the patch number, use 'type:minor' or 'type:major' to override.
+Bumps the project version number. Defaults to bumping the patch number, use 'type:minor' or 'type:major' to override, or set explicitly with version:x.y.z
 ### ios bump_podspec
 ```
 fastlane ios bump_podspec
