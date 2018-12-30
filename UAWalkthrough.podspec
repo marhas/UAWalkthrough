@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'UAWalkthrough'
-  s.version          = '1.0.5'
+  s.version          = '1.0.6'
   s.summary          = 'Create an onboarding experience for your app by highlighting and annotating its different elements.'
 
 # This description is used to generate tags and improve search results.
