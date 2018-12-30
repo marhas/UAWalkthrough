@@ -11,8 +11,9 @@ public class DimmingViewWithHole: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
-        guard let delegate = UIApplication.shared.delegate, let optionalWindow = delegate.window, let appWindow = optionalWindow else { return }
-        
+        let screenBounds = UIScreen.main.bounds
+        let maxDimension = max(screenBounds.height, screenBounds.width)  // To support rotating
+
         self.backgroundColor = UIColor.clear
         
         let topDimmingView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
@@ -20,8 +21,8 @@ public class DimmingViewWithHole: UIView {
         addSubview(topDimmingView)
         topDimmingView.backgroundColor = UIColor.black.withAlphaComponent(dimmingAlpha)
         topDimmingView.bottomAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        topDimmingView.heightAnchor.constraint(equalToConstant: appWindow.frame.size.height).isActive = true
-        topDimmingView.widthAnchor.constraint(equalToConstant: appWindow.frame.size.width*2).isActive = true
+        topDimmingView.heightAnchor.constraint(equalToConstant: maxDimension).isActive = true
+        topDimmingView.widthAnchor.constraint(equalToConstant: maxDimension*2).isActive = true
         topDimmingView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         let bottomDimmingView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
@@ -29,8 +30,8 @@ public class DimmingViewWithHole: UIView {
         addSubview(bottomDimmingView)
         bottomDimmingView.backgroundColor = UIColor.black.withAlphaComponent(dimmingAlpha)
         bottomDimmingView.topAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        bottomDimmingView.heightAnchor.constraint(equalToConstant: appWindow.frame.size.height).isActive = true
-        bottomDimmingView.widthAnchor.constraint(equalToConstant: appWindow.frame.size.width*2).isActive = true
+        bottomDimmingView.heightAnchor.constraint(equalToConstant: maxDimension).isActive = true
+        bottomDimmingView.widthAnchor.constraint(equalToConstant: maxDimension*2).isActive = true
         bottomDimmingView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         let leftDimmingView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
@@ -39,7 +40,7 @@ public class DimmingViewWithHole: UIView {
         leftDimmingView.backgroundColor = UIColor.black.withAlphaComponent(dimmingAlpha)
         leftDimmingView.rightAnchor.constraint(equalTo: leftAnchor).isActive = true
         leftDimmingView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
-        leftDimmingView.widthAnchor.constraint(equalToConstant: appWindow.frame.size.width).isActive = true
+        leftDimmingView.widthAnchor.constraint(equalToConstant: maxDimension).isActive = true
         leftDimmingView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
         let rightDimmingView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
@@ -48,7 +49,7 @@ public class DimmingViewWithHole: UIView {
         rightDimmingView.backgroundColor = UIColor.black.withAlphaComponent(dimmingAlpha)
         rightDimmingView.leftAnchor.constraint(equalTo: self.rightAnchor).isActive = true
         rightDimmingView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
-        rightDimmingView.widthAnchor.constraint(equalToConstant: appWindow.frame.size.width).isActive = true
+        rightDimmingView.widthAnchor.constraint(equalToConstant: maxDimension).isActive = true
         rightDimmingView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
     }
     

@@ -47,18 +47,31 @@ public struct WalkthroughSettings {
     var stepAnimationDuration = 0.3
     var highlightingOffset = CGPoint(x: 25, y: 25)
     var automaticWalkthroughDelaySeconds: Int?
+    var minTextBubbleHorizontalMargin: CGFloat
+    var preferredTextBubbleMaxLayoutWidth: CGFloat?
 
     public init(stepAnimationDuration: Double = 0.3,
          highlightingOffset: CGPoint = CGPoint(x: 25, y: 25),
-         automaticWalkthroughDelaySeconds: Int? = nil) {
+         automaticWalkthroughDelaySeconds: Int? = nil,
+         minLabelHorizontalMargin: CGFloat = 10,
+         preferredTextBubbleMaxLayoutWidth: CGFloat? = nil
+         ) {
         self.stepAnimationDuration = stepAnimationDuration
         self.highlightingOffset = highlightingOffset
         self.automaticWalkthroughDelaySeconds = automaticWalkthroughDelaySeconds
+        self.minTextBubbleHorizontalMargin = minLabelHorizontalMargin
+        self.preferredTextBubbleMaxLayoutWidth = preferredTextBubbleMaxLayoutWidth
     }
 }
 
 public class WalkthroughVC: UIViewController, WalkthroughController {
-    fileprivate var walkthroughSettings = WalkthroughSettings()
+    fileprivate var walkthroughSettings = WalkthroughSettings() {
+        didSet {
+            if let preferredMaxLayoutWidth = walkthroughSettings.preferredTextBubbleMaxLayoutWidth {
+                textBubble.preferredMaxLayoutWidth = preferredMaxLayoutWidth
+            }
+        }
+    }
     fileprivate var viewCenterXConstraint: NSLayoutConstraint?
     fileprivate var viewCenterYConstraint: NSLayoutConstraint?
     fileprivate var viewHeightConstraint: NSLayoutConstraint?
@@ -78,7 +91,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     static let textBubbleArrowOverlap = CGFloat(8)
 
     var textBubble: PaddingLabel = {
-        let bubblePaddingLabel = PaddingLabel(frame: CGRect(x: 0, y: 0, width: 100, height: 100), insets: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
+        let bubblePaddingLabel = PaddingLabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0), insets: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
         bubblePaddingLabel.backgroundColor = textBubbleBackgroundColor
         bubblePaddingLabel.textColor = .tooltipText
         bubblePaddingLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -179,14 +192,14 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         activateAllHighlightingConstraints()
         
         self.updateTextBubble(walkthroughItem: walkthroughItem)
-        
+
         UIView.animate(withDuration: walkthroughSettings.stepAnimationDuration, animations: {
             view.layoutIfNeeded()
         })
     }
     
     private func updateTextBubble(walkthroughItem: WalkthroughItem) {
-        guard let parentVC = parent else { return }
+        guard let parentVC = parent, let superView = parentVC.view else { return }
         
         deactivateAllTextBubbleConstraints()
         
@@ -196,17 +209,33 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         
         textBubble.isHidden = false
         textBubble.text = walkthroughItem.text
-        textBubbleHorizontalConstraints = [textBubble.centerXAnchor.constraint(equalTo: parentVC.view.centerXAnchor)]
-        textBubbleHorizontalConstraints?.append(textBubble.widthAnchor.constraint(equalTo: parentVC.view.widthAnchor, constant: -20))
-        
+        let centerConstraint = textBubble.centerXAnchor.constraint(equalTo: walkthroughItem.highlightedArea.centerXAnchor)
+        centerConstraint.priority = .defaultLow
+
+        let leftMarginConstraint: NSLayoutConstraint
+        let rightMarginConstraint: NSLayoutConstraint
+        if #available(iOS 11.0, *) {
+            leftMarginConstraint = textBubble.leftAnchor.constraint(greaterThanOrEqualTo: superView.safeAreaLayoutGuide.leftAnchor, constant: walkthroughSettings.minTextBubbleHorizontalMargin)
+            rightMarginConstraint = superView.safeAreaLayoutGuide.rightAnchor.constraint(greaterThanOrEqualTo: textBubble.rightAnchor, constant: walkthroughSettings.minTextBubbleHorizontalMargin)
+        } else {
+            leftMarginConstraint = textBubble.leftAnchor.constraint(greaterThanOrEqualTo: superView.leftAnchor, constant: walkthroughSettings.minTextBubbleHorizontalMargin)
+            rightMarginConstraint = superView.rightAnchor.constraint(greaterThanOrEqualTo: textBubble.rightAnchor, constant: walkthroughSettings.minTextBubbleHorizontalMargin)
+        }
+
+        textBubbleHorizontalConstraints = [
+            centerConstraint,
+            leftMarginConstraint,
+            rightMarginConstraint
+        ]
+
         if walkthroughItem.textLocation == .above {
             textBubbleVerticalConstraint = textBubble.bottomAnchor.constraint(equalTo: backgroundDimmingView.topAnchor, constant: -WalkthroughVC.distanceBetweenTextBubbleAndHightlightedArea)
         } else {
             textBubbleVerticalConstraint = textBubble.topAnchor.constraint(equalTo: backgroundDimmingView.bottomAnchor, constant: WalkthroughVC.distanceBetweenTextBubbleAndHightlightedArea)
         }
-        
+
         activateAllTextBubbleConstraints()
-        
+
         arrowYConstraint?.isActive = false
         arrowXConstraint?.isActive = false
 

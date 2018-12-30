@@ -18,18 +18,26 @@ class ViewController: UIViewController {
     @IBOutlet weak var button3: UIButton!
     @IBOutlet weak var button4: UIButton!
 
+    var walkthroughSettings = WalkthroughSettings(preferredTextBubbleMaxLayoutWidth: 300)
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let walkthroughSettings = WalkthroughSettings(automaticWalkthroughDelaySeconds: 3)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [unowned self] in
-            self.startWalkthrough(withSettings: walkthroughSettings)
-        }
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewDidAppear(_ animated: Bool) {
+//        let walkthroughSettings = WalkthroughSettings(automaticWalkthroughDelaySeconds: 3)
+        hasCompletedWalkthrough = false
+
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [unowned self] in
+            self.startWalkthrough(withSettings: walkthroughSettings)
+//        self.startWalkthrough()
+//        }
+    }
+
+    @IBAction func restartWalkthrough(_ sender: Any) {
+        hasCompletedWalkthrough = false
+        self.startWalkthrough(withSettings: walkthroughSettings)
     }
 }
 

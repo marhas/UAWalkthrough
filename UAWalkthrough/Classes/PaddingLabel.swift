@@ -37,11 +37,10 @@
 
     override public var intrinsicContentSize: CGSize {
         var intrinsicSuperViewContentSize = super.intrinsicContentSize
-
-        let textWidth = frame.size.width - (self.leftInset + self.rightInset)
-        let size = CGSize(width: textWidth, height: CGFloat.greatestFiniteMagnitude)
+        let size = CGSize(width: intrinsicSuperViewContentSize.width, height: CGFloat.greatestFiniteMagnitude)
         let newSize = self.text!.boundingRect(with: size, options: NSStringDrawingOptions.usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: self.font], context: nil)
-        intrinsicSuperViewContentSize.height = ceil(newSize.size.height) + self.topInset + self.bottomInset
+        intrinsicSuperViewContentSize.height = ceil(newSize.size.height) + topInset + bottomInset
+        intrinsicSuperViewContentSize.width = ceil(newSize.size.width) + leftInset + rightInset
 
         return intrinsicSuperViewContentSize
     }
