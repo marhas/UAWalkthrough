@@ -149,7 +149,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         
         activateAllHighlightingConstraints()
         
-        let dummyWalkthroughItem = WalkthroughItem(highlightedArea: parentVC.view, textLocation: .above, text: "")
+        let dummyWalkthroughItem = HighlightedItem(highlightedArea: parentVC.view, textLocation: .above, text: "")
         showWalkthroughItem(dummyWalkthroughItem, onView: parentVC.view)
         
         stepWalkthrough()
@@ -182,14 +182,16 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     
     private func showWalkthroughItem(_ walkthroughItem: WalkthroughItem, onView view: UIView) {
         deactivateAllHighlightingConstraints()
-        
-        viewWidthConstraint =  backgroundDimmingView.widthAnchor.constraint(equalTo: walkthroughItem.highlightedArea.widthAnchor, multiplier: 1, constant: walkthroughSettings.highlightingOffset.x)
-        viewHeightConstraint =  backgroundDimmingView.heightAnchor.constraint(equalTo: walkthroughItem.highlightedArea.heightAnchor, multiplier: 1, constant: walkthroughSettings.highlightingOffset.y)
-        
-        viewCenterXConstraint = backgroundDimmingView.centerXAnchor.constraint(equalTo: walkthroughItem.highlightedArea.centerXAnchor)
-        viewCenterYConstraint = backgroundDimmingView.centerYAnchor.constraint(equalTo: walkthroughItem.highlightedArea.centerYAnchor)
-        
-        activateAllHighlightingConstraints()
+
+        if let hightlightedItem = walkthroughItem as? HighlightedItem {
+            viewWidthConstraint =  backgroundDimmingView.widthAnchor.constraint(equalTo: hightlightedItem.highlightedArea.widthAnchor, multiplier: 1, constant: walkthroughSettings.highlightingOffset.x)
+            viewHeightConstraint =  backgroundDimmingView.heightAnchor.constraint(equalTo: hightlightedItem.highlightedArea.heightAnchor, multiplier: 1, constant: walkthroughSettings.highlightingOffset.y)
+
+            viewCenterXConstraint = backgroundDimmingView.centerXAnchor.constraint(equalTo: hightlightedItem.highlightedArea.centerXAnchor)
+            viewCenterYConstraint = backgroundDimmingView.centerYAnchor.constraint(equalTo: hightlightedItem.highlightedArea.centerYAnchor)
+
+            activateAllHighlightingConstraints()
+        }
         
         self.updateTextBubble(walkthroughItem: walkthroughItem)
 
@@ -197,20 +199,16 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
             view.layoutIfNeeded()
         })
     }
-    
+
     private func updateTextBubble(walkthroughItem: WalkthroughItem) {
         guard let parentVC = parent, let superView = parentVC.view else { return }
-        
+
         deactivateAllTextBubbleConstraints()
-        
         if textBubble.superview == nil {
             backgroundDimmingView.addSubview(textBubble)
         }
-        
         textBubble.isHidden = false
         textBubble.text = walkthroughItem.text
-        let centerConstraint = textBubble.centerXAnchor.constraint(equalTo: walkthroughItem.highlightedArea.centerXAnchor)
-        centerConstraint.priority = .defaultLow
 
         let leftMarginConstraint: NSLayoutConstraint
         let rightMarginConstraint: NSLayoutConstraint
@@ -223,12 +221,35 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         }
 
         textBubbleHorizontalConstraints = [
-            centerConstraint,
             leftMarginConstraint,
             rightMarginConstraint
         ]
 
-        if walkthroughItem.textLocation == .above {
+        if let standaloneItem = walkthroughItem as? StandaloneItem {
+            update(standaloneItem: standaloneItem)
+        } else if let highlightedItem = walkthroughItem as? HighlightedItem {
+            update(highlightedItem: highlightedItem)
+        } else {
+            fatalError("Non-supported WalkthroughItem")
+        }
+    }
+
+    private func update(standaloneItem: StandaloneItem) {
+        guard let parentVC = parent else { return }
+        let horizontalCenterConstraint = textBubble.centerXAnchor.constraint(equalTo: parentVC.view.centerXAnchor, constant: standaloneItem.centerOffset.x)
+        let verticalCenterConstraint = textBubble.centerYAnchor.constraint(equalTo: parentVC.view.centerYAnchor, constant: standaloneItem.centerOffset.y)
+        textBubbleHorizontalConstraints?.append(horizontalCenterConstraint)
+        textBubbleVerticalConstraint = verticalCenterConstraint
+        arrow.isHidden = true
+        activateAllTextBubbleConstraints()
+    }
+
+    private func update(highlightedItem: HighlightedItem) {
+        let centerConstraint = textBubble.centerXAnchor.constraint(equalTo: highlightedItem.highlightedArea.centerXAnchor)
+        centerConstraint.priority = .defaultLow
+        textBubbleHorizontalConstraints?.append(centerConstraint)
+
+        if highlightedItem.textLocation == .above {
             textBubbleVerticalConstraint = textBubble.bottomAnchor.constraint(equalTo: backgroundDimmingView.topAnchor, constant: -WalkthroughVC.distanceBetweenTextBubbleAndHightlightedArea)
         } else {
             textBubbleVerticalConstraint = textBubble.topAnchor.constraint(equalTo: backgroundDimmingView.bottomAnchor, constant: WalkthroughVC.distanceBetweenTextBubbleAndHightlightedArea)
@@ -243,11 +264,12 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
             backgroundDimmingView.addSubview(arrow)
             backgroundDimmingView.bringSubviewToFront(textBubble)
         }
+        arrow.isHidden = false
 
         // The rotation of the arrow should happen so that is is not visible. Hence it doesn't even need to be animated, but it is easier to get the timing right that way
         let rotationAnimationDuration = walkthroughSettings.stepAnimationDuration / 3.0
         let rotationAnimationDelay = rotationAnimationDuration
-        if walkthroughItem.textLocation == .below {
+        if highlightedItem.textLocation == .below {
             UIView.animate(withDuration: rotationAnimationDuration, delay: rotationAnimationDelay, options: [], animations: { 
                 self.arrow.transform = CGAffineTransform(rotationAngle: .pi)
             }, completion: nil)
@@ -309,7 +331,20 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     }
 }
 
-public struct WalkthroughItem {
+public protocol WalkthroughItem {
+    var text: String { get set }
+}
+
+public struct StandaloneItem: WalkthroughItem {
+    public init(centerOffset: CGPoint = CGPoint.zero, text: String) {
+        self.centerOffset = centerOffset
+        self.text = text
+    }
+    public var centerOffset: CGPoint
+    public var text: String
+}
+
+public struct HighlightedItem: WalkthroughItem {
     public init(highlightedArea: UIView, textLocation: TextLocation, text: String) {
         self.highlightedArea = highlightedArea
         self.textLocation = textLocation
