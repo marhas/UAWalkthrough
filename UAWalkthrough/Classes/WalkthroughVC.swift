@@ -48,28 +48,25 @@ public struct WalkthroughSettings {
     var highlightingOffset = CGPoint(x: 25, y: 25)
     var automaticWalkthroughDelaySeconds: Int?
     var minTextBubbleHorizontalMargin: CGFloat
-    var preferredTextBubbleMaxLayoutWidth: CGFloat?
+    var preferredTextBubbleMaxLayoutWidth: CGFloat
 
     public init(stepAnimationDuration: Double = 0.3,
          highlightingOffset: CGPoint = CGPoint(x: 25, y: 25),
          automaticWalkthroughDelaySeconds: Int? = nil,
          minLabelHorizontalMargin: CGFloat = 10,
-         preferredTextBubbleMaxLayoutWidth: CGFloat? = nil
-         ) {
+         preferredTextBubbleMaxLayoutWidth: CGFloat? = nil) {
         self.stepAnimationDuration = stepAnimationDuration
         self.highlightingOffset = highlightingOffset
         self.automaticWalkthroughDelaySeconds = automaticWalkthroughDelaySeconds
         self.minTextBubbleHorizontalMargin = minLabelHorizontalMargin
-        self.preferredTextBubbleMaxLayoutWidth = preferredTextBubbleMaxLayoutWidth
+        self.preferredTextBubbleMaxLayoutWidth = preferredTextBubbleMaxLayoutWidth ?? UIScreen.main.bounds.width - 2 * minLabelHorizontalMargin
     }
 }
 
 public class WalkthroughVC: UIViewController, WalkthroughController {
     fileprivate var walkthroughSettings = WalkthroughSettings() {
         didSet {
-            if let preferredMaxLayoutWidth = walkthroughSettings.preferredTextBubbleMaxLayoutWidth {
-                textBubble.preferredMaxLayoutWidth = preferredMaxLayoutWidth
-            }
+            textBubble.preferredMaxLayoutWidth = walkthroughSettings.preferredTextBubbleMaxLayoutWidth
         }
     }
     fileprivate var viewCenterXConstraint: NSLayoutConstraint?
@@ -210,15 +207,8 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         textBubble.isHidden = false
         textBubble.text = walkthroughItem.text
 
-        let leftMarginConstraint: NSLayoutConstraint
-        let rightMarginConstraint: NSLayoutConstraint
-        if #available(iOS 11.0, *) {
-            leftMarginConstraint = textBubble.leftAnchor.constraint(greaterThanOrEqualTo: superView.safeAreaLayoutGuide.leftAnchor, constant: walkthroughSettings.minTextBubbleHorizontalMargin)
-            rightMarginConstraint = superView.safeAreaLayoutGuide.rightAnchor.constraint(greaterThanOrEqualTo: textBubble.rightAnchor, constant: walkthroughSettings.minTextBubbleHorizontalMargin)
-        } else {
-            leftMarginConstraint = textBubble.leftAnchor.constraint(greaterThanOrEqualTo: superView.leftAnchor, constant: walkthroughSettings.minTextBubbleHorizontalMargin)
-            rightMarginConstraint = superView.rightAnchor.constraint(greaterThanOrEqualTo: textBubble.rightAnchor, constant: walkthroughSettings.minTextBubbleHorizontalMargin)
-        }
+        let leftMarginConstraint = textBubble.leftAnchor.constraint(greaterThanOrEqualTo: superView.leftAnchor, constant: walkthroughSettings.minTextBubbleHorizontalMargin)
+        let rightMarginConstraint = superView.rightAnchor.constraint(greaterThanOrEqualTo: textBubble.rightAnchor, constant: walkthroughSettings.minTextBubbleHorizontalMargin)
 
         textBubbleHorizontalConstraints = [
             leftMarginConstraint,

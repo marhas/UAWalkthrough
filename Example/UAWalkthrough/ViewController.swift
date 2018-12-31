@@ -20,11 +20,6 @@ class ViewController: UIViewController {
 
     var walkthroughSettings = WalkthroughSettings(automaticWalkthroughDelaySeconds: 5, preferredTextBubbleMaxLayoutWidth: 300)
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-    }
-
     override func viewDidAppear(_ animated: Bool) {
         hasCompletedWalkthrough = false
 
@@ -48,7 +43,7 @@ extension ViewController: WalkthroughProvider {
             HighlightedItem(highlightedArea: button2, textLocation: .below, text: "This is another button. Try it. But first we need to finish the walkthrough."),
             HighlightedItem(highlightedArea: button3, textLocation: .above, text: "Down here there's yet another button, which will do absolutely nothing for you."),
             HighlightedItem(highlightedArea: button4, textLocation: .above, text: "...and this is the fourth and last button on this screen, and also the end of the onboarding."),
-            StandaloneItem(centerOffset: CGPoint(x: 0, y: -200), text: "For more advanced usage scenarios, you can add a delegate to take action on walkthrough completion. Thanks for your attention!"),
+            StandaloneItem(centerOffset: CGPoint(x: 0, y: -120), text: "For more advanced usage scenarios, you can add a delegate to take action on walkthrough completion. Thanks for your attention!"),
         ]
     }
 }
