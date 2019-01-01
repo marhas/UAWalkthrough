@@ -49,17 +49,21 @@ public struct WalkthroughSettings {
     var automaticWalkthroughDelaySeconds: Int?
     var minTextBubbleHorizontalMargin: CGFloat
     var preferredTextBubbleMaxLayoutWidth: CGFloat
+    var textBubbleInsets: UIEdgeInsets
 
     public init(stepAnimationDuration: Double = 0.3,
          highlightingOffset: CGPoint = CGPoint(x: 25, y: 25),
          automaticWalkthroughDelaySeconds: Int? = nil,
          minLabelHorizontalMargin: CGFloat = 10,
-         preferredTextBubbleMaxLayoutWidth: CGFloat? = nil) {
+         preferredTextBubbleMaxLayoutWidth: CGFloat? = nil,
+         textBubbleInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+         ) {
         self.stepAnimationDuration = stepAnimationDuration
         self.highlightingOffset = highlightingOffset
         self.automaticWalkthroughDelaySeconds = automaticWalkthroughDelaySeconds
         self.minTextBubbleHorizontalMargin = minLabelHorizontalMargin
         self.preferredTextBubbleMaxLayoutWidth = preferredTextBubbleMaxLayoutWidth ?? UIScreen.main.bounds.width - 2 * minLabelHorizontalMargin
+        self.textBubbleInsets = textBubbleInsets
     }
 }
 
@@ -67,6 +71,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     fileprivate var walkthroughSettings = WalkthroughSettings() {
         didSet {
             textBubble.preferredMaxLayoutWidth = walkthroughSettings.preferredTextBubbleMaxLayoutWidth
+            textBubble.insets = walkthroughSettings.textBubbleInsets
         }
     }
     fileprivate var viewCenterXConstraint: NSLayoutConstraint?

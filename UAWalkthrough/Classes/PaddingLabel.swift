@@ -30,6 +30,18 @@
         super.init(coder: aDecoder)
     }
 
+    public var insets: UIEdgeInsets {
+        get {
+            return UIEdgeInsets(top: topInset, left: leftInset, bottom: bottomInset, right: rightInset)
+        }
+        set {
+            topInset = newValue.top
+            leftInset = newValue.left
+            bottomInset = newValue.bottom
+            rightInset = newValue.right
+        }
+    }
+
     override public func drawText(in rect: CGRect) {
         let padding = UIEdgeInsets(top: topInset, left: leftInset, bottom: bottomInset, right: rightInset)
         super.drawText(in: rect.inset(by: padding))
