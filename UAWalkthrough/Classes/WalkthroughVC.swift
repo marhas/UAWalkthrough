@@ -101,6 +101,17 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         return bubblePaddingLabel
     }()
 
+    // Used to get a smooth animation when the PaddingLabel shrinks as a result of it's text is updated to something shorter.
+    var textBubbleTransitionView: UIView = {
+        let view = UIView()
+        view.backgroundColor = textBubbleBackgroundColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 6.0
+        view.layer.masksToBounds = true
+        view.clipsToBounds = true
+        return view
+    }()
+
     var currentWalkthroughItemIndex = 0
     
     var arrow = WalkthroughVC.createArrowView(size: CGSize(width: 25, height: distanceBetweenTextBubbleAndHightlightedArea + textBubbleArrowOverlap))
@@ -145,7 +156,10 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         viewCenterYConstraint = backgroundDimmingView.centerYAnchor.constraint(equalTo: parentVC.view.centerYAnchor)
         
         activateAllHighlightingConstraints()
-        
+
+        backgroundDimmingView.addSubview(arrow)
+        backgroundDimmingView.bringSubviewToFront(textBubble)
+
         let dummyWalkthroughItem = HighlightedItem(highlightedArea: parentVC.view, textLocation: .above, text: "")
         showWalkthroughItem(dummyWalkthroughItem, onView: parentVC.view)
         
@@ -186,10 +200,9 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
 
             viewCenterXConstraint = backgroundDimmingView.centerXAnchor.constraint(equalTo: hightlightedItem.highlightedArea.centerXAnchor)
             viewCenterYConstraint = backgroundDimmingView.centerYAnchor.constraint(equalTo: hightlightedItem.highlightedArea.centerYAnchor)
-
             activateAllHighlightingConstraints()
         }
-        
+
         self.updateTextBubble(walkthroughItem: walkthroughItem)
 
         UIView.animate(withDuration: walkthroughSettings.stepAnimationDuration, animations: {
@@ -201,8 +214,14 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         guard let parentVC = parent, let superView = parentVC.view else { return }
 
         deactivateAllTextBubbleConstraints()
+        deactivateAllArrowConstraints()
         if textBubble.superview == nil {
             backgroundDimmingView.addSubview(textBubble)
+            backgroundDimmingView.insertSubview(textBubbleTransitionView, belowSubview: textBubble)
+            textBubbleTransitionView.centerXAnchor.constraint(equalTo: textBubble.centerXAnchor).isActive = true
+            textBubbleTransitionView.centerYAnchor.constraint(equalTo: textBubble.centerYAnchor).isActive = true
+            textBubbleTransitionView.widthAnchor.constraint(equalTo: textBubble.widthAnchor).isActive = true
+            textBubbleTransitionView.heightAnchor.constraint(equalTo: textBubble.heightAnchor).isActive = true
         }
         textBubble.isHidden = false
         textBubble.text = walkthroughItem.text
@@ -231,6 +250,9 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         textBubbleHorizontalConstraints?.append(horizontalCenterConstraint)
         textBubbleVerticalConstraint = verticalCenterConstraint
         arrow.isHidden = true
+        arrowXConstraint = textBubble.centerXAnchor.constraint(equalTo: arrow.centerXAnchor)
+        arrowYConstraint = textBubble.centerYAnchor.constraint(equalTo: arrow.centerYAnchor)
+        activateAllArowConstraints()
         activateAllTextBubbleConstraints()
     }
 
@@ -247,13 +269,8 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
 
         activateAllTextBubbleConstraints()
 
-        arrowYConstraint?.isActive = false
-        arrowXConstraint?.isActive = false
+        deactivateAllArrowConstraints()
 
-        if (arrow.superview == nil) {
-            backgroundDimmingView.addSubview(arrow)
-            backgroundDimmingView.bringSubviewToFront(textBubble)
-        }
         arrow.isHidden = false
 
         // The rotation of the arrow should happen so that is is not visible. Hence it doesn't even need to be animated, but it is easier to get the timing right that way
@@ -265,16 +282,14 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
             }, completion: nil)
             arrowYConstraint = backgroundDimmingView.bottomAnchor.constraint(equalTo: arrow.topAnchor, constant: WalkthroughVC.textBubbleArrowOverlap - 1)
             arrowXConstraint = arrow.centerXAnchor.constraint(equalTo: backgroundDimmingView.centerXAnchor)
-            arrowYConstraint?.isActive = true
-            arrowXConstraint?.isActive = true
+            activateAllArowConstraints()
         } else {
             UIView.animate(withDuration: rotationAnimationDuration, delay: rotationAnimationDelay, options: [], animations: {
                 self.arrow.transform = .identity
             }, completion: nil)
             arrowYConstraint = arrow.bottomAnchor.constraint(equalTo: backgroundDimmingView.topAnchor, constant: WalkthroughVC.textBubbleArrowOverlap - 1)
             arrowXConstraint = arrow.centerXAnchor.constraint(equalTo: backgroundDimmingView.centerXAnchor)
-            arrowYConstraint?.isActive = true
-            arrowXConstraint?.isActive = true
+            activateAllArowConstraints()
         }
     }
     
@@ -311,7 +326,17 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         }
         textBubbleVerticalConstraint?.isActive = false
     }
-    
+
+    private func activateAllArowConstraints() {
+        arrowXConstraint?.isActive = true
+        arrowYConstraint?.isActive = true
+    }
+
+    private func deactivateAllArrowConstraints() {
+        arrowXConstraint?.isActive = false
+        arrowYConstraint?.isActive = false
+    }
+
     private func activateAllHighlightingConstraints() {
         NSLayoutConstraint.activate([viewWidthConstraint, viewHeightConstraint, viewCenterXConstraint, viewCenterYConstraint].compactMap { $0 })
     }
