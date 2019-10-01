@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		24D7DC1718BAFFD7091D7837 /* Pods_UAWalkthrough_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 099CE8B41F0AD03D5C417FBE /* Pods_UAWalkthrough_Example.framework */; };
 		5F3945FD235F37E600421F79 /* DefaultStyleDemoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F3945FC235F37E600421F79 /* DefaultStyleDemoVC.swift */; };
+		5FBEEFC02343780600F3E285 /* UAWalkthrough_ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBEEFBF2343780600F3E285 /* UAWalkthrough_ExampleTests.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* WhiteStyleDemoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* WhiteStyleDemoVC.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -16,12 +17,25 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		5FBEEFC22343780600F3E285 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 607FACC81AFB9204008FA782 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 607FACCF1AFB9204008FA782;
+			remoteInfo = UAWalkthrough_Example;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		099CE8B41F0AD03D5C417FBE /* Pods_UAWalkthrough_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UAWalkthrough_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		218F8D5BD5B9526A986DEED4 /* Pods-UAWalkthrough_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UAWalkthrough_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UAWalkthrough_Tests/Pods-UAWalkthrough_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		24668621DE3E872E6EB7D178 /* UAWalkthrough.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = UAWalkthrough.podspec; path = ../UAWalkthrough.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		5A07E64EF69B40890A6D189B /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		5F3945FC235F37E600421F79 /* DefaultStyleDemoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultStyleDemoVC.swift; sourceTree = "<group>"; };
+		5FBEEFBD2343780600F3E285 /* UAWalkthrough_ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UAWalkthrough_ExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5FBEEFBF2343780600F3E285 /* UAWalkthrough_ExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UAWalkthrough_ExampleTests.swift; sourceTree = "<group>"; };
+		5FBEEFC12343780600F3E285 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* UAWalkthrough_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UAWalkthrough_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -37,6 +51,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		5FBEEFBA2343780600F3E285 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		607FACCD1AFB9204008FA782 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -59,11 +80,21 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		5FBEEFBE2343780600F3E285 /* UAWalkthrough_ExampleTests */ = {
+			isa = PBXGroup;
+			children = (
+				5FBEEFBF2343780600F3E285 /* UAWalkthrough_ExampleTests.swift */,
+				5FBEEFC12343780600F3E285 /* Info.plist */,
+			);
+			path = UAWalkthrough_ExampleTests;
+			sourceTree = "<group>";
+		};
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for UAWalkthrough */,
+				5FBEEFBE2343780600F3E285 /* UAWalkthrough_ExampleTests */,
 				607FACD11AFB9204008FA782 /* Products */,
 				0C092E734482111ECEA04005 /* Pods */,
 				9FA989B16EDE4EFD34E3363B /* Frameworks */,
@@ -74,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				607FACD01AFB9204008FA782 /* UAWalkthrough_Example.app */,
+				5FBEEFBD2343780600F3E285 /* UAWalkthrough_ExampleTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -123,6 +155,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		5FBEEFBC2343780600F3E285 /* UAWalkthrough_ExampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5FBEEFC62343780600F3E285 /* Build configuration list for PBXNativeTarget "UAWalkthrough_ExampleTests" */;
+			buildPhases = (
+				5FBEEFB92343780600F3E285 /* Sources */,
+				5FBEEFBA2343780600F3E285 /* Frameworks */,
+				5FBEEFBB2343780600F3E285 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5FBEEFC32343780600F3E285 /* PBXTargetDependency */,
+			);
+			name = UAWalkthrough_ExampleTests;
+			productName = UAWalkthrough_ExampleTests;
+			productReference = 5FBEEFBD2343780600F3E285 /* UAWalkthrough_ExampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		607FACCF1AFB9204008FA782 /* UAWalkthrough_Example */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACEF1AFB9204008FA782 /* Build configuration list for PBXNativeTarget "UAWalkthrough_Example" */;
@@ -149,10 +199,16 @@
 		607FACC81AFB9204008FA782 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0830;
+				LastSwiftUpdateCheck = 1100;
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
+					5FBEEFBC2343780600F3E285 = {
+						CreatedOnToolsVersion = 11.0;
+						DevelopmentTeam = FXF3A286RW;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 607FACCF1AFB9204008FA782;
+					};
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = HJ5QBT68V2;
@@ -175,11 +231,19 @@
 			projectRoot = "";
 			targets = (
 				607FACCF1AFB9204008FA782 /* UAWalkthrough_Example */,
+				5FBEEFBC2343780600F3E285 /* UAWalkthrough_ExampleTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		5FBEEFBB2343780600F3E285 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		607FACCE1AFB9204008FA782 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -247,6 +311,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		5FBEEFB92343780600F3E285 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FBEEFC02343780600F3E285 /* UAWalkthrough_ExampleTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		607FACCC1AFB9204008FA782 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -258,6 +330,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5FBEEFC32343780600F3E285 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 607FACCF1AFB9204008FA782 /* UAWalkthrough_Example */;
+			targetProxy = 5FBEEFC22343780600F3E285 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		607FACD91AFB9204008FA782 /* Main.storyboard */ = {
@@ -279,6 +359,59 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		5FBEEFC42343780600F3E285 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = FXF3A286RW;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = UAWalkthrough_ExampleTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "nu.hasselaar.UAWalkthrough-ExampleTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/UAWalkthrough_Example.app/UAWalkthrough_Example";
+			};
+			name = Debug;
+		};
+		5FBEEFC52343780600F3E285 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FXF3A286RW;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = UAWalkthrough_ExampleTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "nu.hasselaar.UAWalkthrough-ExampleTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/UAWalkthrough_Example.app/UAWalkthrough_Example";
+			};
+			name = Release;
+		};
 		607FACED1AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -415,6 +548,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		5FBEEFC62343780600F3E285 /* Build configuration list for PBXNativeTarget "UAWalkthrough_ExampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5FBEEFC42343780600F3E285 /* Debug */,
+				5FBEEFC52343780600F3E285 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		607FACCB1AFB9204008FA782 /* Build configuration list for PBXProject "UAWalkthrough" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

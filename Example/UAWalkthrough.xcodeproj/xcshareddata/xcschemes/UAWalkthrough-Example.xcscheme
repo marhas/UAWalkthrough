@@ -69,9 +69,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "607FACE41AFB9204008FA782"
-               BuildableName = "UAWalkthrough_Tests.xctest"
-               BlueprintName = "UAWalkthrough_Tests"
+               BlueprintIdentifier = "5FBEEFBC2343780600F3E285"
+               BuildableName = "UAWalkthrough_ExampleTests.xctest"
+               BlueprintName = "UAWalkthrough_ExampleTests"
                ReferencedContainer = "container:UAWalkthrough.xcodeproj">
             </BuildableReference>
          </TestableReference>
