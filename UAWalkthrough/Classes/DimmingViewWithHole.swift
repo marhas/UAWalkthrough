@@ -24,7 +24,7 @@ public class DimmingViewWithHole: UIView {
         topDimmingView.heightAnchor.constraint(equalToConstant: maxDimension).isActive = true
         topDimmingView.widthAnchor.constraint(equalToConstant: maxDimension*2).isActive = true
         topDimmingView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        
+
         let bottomDimmingView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
         bottomDimmingView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(bottomDimmingView)
@@ -33,7 +33,7 @@ public class DimmingViewWithHole: UIView {
         bottomDimmingView.heightAnchor.constraint(equalToConstant: maxDimension).isActive = true
         bottomDimmingView.widthAnchor.constraint(equalToConstant: maxDimension*2).isActive = true
         bottomDimmingView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        
+
         let leftDimmingView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
         leftDimmingView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(leftDimmingView)
@@ -42,7 +42,7 @@ public class DimmingViewWithHole: UIView {
         leftDimmingView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
         leftDimmingView.widthAnchor.constraint(equalToConstant: maxDimension).isActive = true
         leftDimmingView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        
+
         let rightDimmingView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
         rightDimmingView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(rightDimmingView)
