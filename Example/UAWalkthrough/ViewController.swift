@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var button3: UIButton!
     @IBOutlet weak var button4: UIButton!
 
-    var walkthroughSettings = WalkthroughSettings(preferredTextBubbleMaxLayoutWidth: 300)
+    var walkthroughSettings = WalkthroughSettings(preferredTextBubbleMaxLayoutWidth: 300, presentationMode: .none)
     var walkthroughStyle = TextBubbleStyle.white
 
     override func viewDidAppear(_ animated: Bool) {

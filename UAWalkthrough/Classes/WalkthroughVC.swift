@@ -45,24 +45,32 @@ public extension WalkthroughProvider where Self: UIViewController {
 }
 
 public struct WalkthroughSettings {
-    var stepAnimationDuration = 0.3
-    var highlightingOffset = CGPoint(x: 25, y: 25)
+    var stepAnimationDuration: Double
+    var highlightingOffset: CGPoint
     var automaticWalkthroughDelaySeconds: Int?
     var minTextBubbleHorizontalMargin: CGFloat
     var preferredTextBubbleMaxLayoutWidth: CGFloat
-    var shouldHighlight: Bool = true
+    var presentationMode: PresentationMode
+
+    public enum PresentationMode {
+        case dimAndHighlight(dimmingColor: UIColor = .black, dimmingLevel: CGFloat = 0.7)
+        case dim(dimmingColor: UIColor = .black, dimmingLevel: CGFloat = 0.7)
+        case none
+    }
 
     public init(stepAnimationDuration: Double = 0.3,
          highlightingOffset: CGPoint = CGPoint(x: 25, y: 25),
          automaticWalkthroughDelaySeconds: Int? = nil,
          minLabelHorizontalMargin: CGFloat = 10,
-         preferredTextBubbleMaxLayoutWidth: CGFloat? = nil
+         preferredTextBubbleMaxLayoutWidth: CGFloat? = nil,
+         presentationMode: PresentationMode = .dimAndHighlight()
          ) {
         self.stepAnimationDuration = stepAnimationDuration
         self.highlightingOffset = highlightingOffset
         self.automaticWalkthroughDelaySeconds = automaticWalkthroughDelaySeconds
         self.minTextBubbleHorizontalMargin = minLabelHorizontalMargin
         self.preferredTextBubbleMaxLayoutWidth = preferredTextBubbleMaxLayoutWidth ?? UIScreen.main.bounds.width - 2 * minLabelHorizontalMargin
+        self.presentationMode = presentationMode
     }
 }
 
@@ -133,7 +141,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     
     weak var walkthroughProvider: WalkthroughProvider?
     weak var walkthroughDelegate: WalkthroughDelegate?
-    fileprivate var backgroundDimmingView: DimmingViewWithHole!
+    fileprivate var backgroundDimmingView: UIView! // DimmingViewWithHole!
     
     static let textBubbleBackgroundColor = UIColor.tooltipBackground
     static let distanceBetweenTextBubbleAndHightlightedArea: CGFloat = 17
@@ -194,18 +202,31 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         tapGestureRecognizer.addTarget(self, action: #selector(stepWalkthrough))
 
         deactivateAllHighlightingConstraints()
-        
-        backgroundDimmingView = DimmingViewWithHole(frame: .zero)
-        backgroundDimmingView.translatesAutoresizingMaskIntoConstraints = false
+
+        switch settings.presentationMode {
+        case .dimAndHighlight(let dimmingColor, let dimmingLevel):
+            backgroundDimmingView = DimmingViewWithHole(frame: .zero, dimmingColor: dimmingColor, dimmingAlpha: dimmingLevel)
+            parentVC.view.addSubview(backgroundDimmingView)
+            backgroundDimmingView.translatesAutoresizingMaskIntoConstraints = false
+        case .dim(let dimmingColor, let dimmingLevel):
+            backgroundDimmingView = UIView()
+            backgroundDimmingView.backgroundColor = dimmingColor.withAlphaComponent(dimmingLevel)
+            parentVC.view.addSubview(backgroundDimmingView)
+            backgroundDimmingView.bound(inside: parentVC.view, considerSafeArea: false)
+        case .none:
+            backgroundDimmingView = UIView()
+            backgroundDimmingView.backgroundColor = .clear
+            parentVC.view.addSubview(backgroundDimmingView)
+            backgroundDimmingView.bound(inside: parentVC.view, considerSafeArea: false)
+        }
         backgroundDimmingView.addGestureRecognizer(tapGestureRecognizer)
-        
-        parentVC.view.addSubview(backgroundDimmingView)
-        highlightingViewWidthConstraint = backgroundDimmingView.widthAnchor.constraint(equalToConstant: 0)
-        highlightingViewHeightConstraint = backgroundDimmingView.heightAnchor.constraint(equalToConstant: 0)
-        highlightingViewCenterXConstraint = backgroundDimmingView.centerXAnchor.constraint(equalTo: parentVC.view.centerXAnchor)
-        highlightingViewCenterYConstraint = backgroundDimmingView.centerYAnchor.constraint(equalTo: parentVC.view.centerYAnchor)
-        
-        activateAllHighlightingConstraints()
+
+//        highlightingViewWidthConstraint = backgroundDimmingView.widthAnchor.constraint(equalToConstant: 0)
+//        highlightingViewHeightConstraint = backgroundDimmingView.heightAnchor.constraint(equalToConstant: 0)
+//        highlightingViewCenterXConstraint = backgroundDimmingView.centerXAnchor.constraint(equalTo: parentVC.view.centerXAnchor)
+//        highlightingViewCenterYConstraint = backgroundDimmingView.centerYAnchor.constraint(equalTo: parentVC.view.centerYAnchor)
+//
+//        activateAllHighlightingConstraints()
 
         textBubbleTransitionView.addSubview(arrow)
         backgroundDimmingView.bringSubviewToFront(textBubble)
@@ -298,7 +319,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         arrow.isHidden = true
         arrowXConstraint = textBubble.centerXAnchor.constraint(equalTo: arrow.centerXAnchor)
         arrowYConstraint = textBubble.centerYAnchor.constraint(equalTo: arrow.centerYAnchor)
-        activateAllArowConstraints()
+        activateAllArrowConstraints()
         activateAllTextBubbleConstraints()
     }
 
@@ -308,10 +329,11 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         textBubbleConstraints = [centerConstraint]
         addHorizontalTextBubbleConstraints()
 
+        let anchorView = textBubbleAnchorView(withHighlightedView: highlightedItem.highlightedArea)
         if highlightedItem.textLocation == .above {
-            textBubbleConstraints.append(textBubble.bottomAnchor.constraint(equalTo: backgroundDimmingView.topAnchor, constant: -WalkthroughVC.distanceBetweenTextBubbleAndHightlightedArea))
+            textBubbleConstraints.append(textBubble.bottomAnchor.constraint(equalTo: anchorView.topAnchor, constant: -WalkthroughVC.distanceBetweenTextBubbleAndHightlightedArea))
         } else {
-            textBubbleConstraints.append(textBubble.topAnchor.constraint(equalTo: backgroundDimmingView.bottomAnchor, constant: WalkthroughVC.distanceBetweenTextBubbleAndHightlightedArea))
+            textBubbleConstraints.append(textBubble.topAnchor.constraint(equalTo: anchorView.bottomAnchor, constant: WalkthroughVC.distanceBetweenTextBubbleAndHightlightedArea))
         }
 
         activateAllTextBubbleConstraints()
@@ -327,19 +349,26 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
             UIView.animate(withDuration: rotationAnimationDuration, delay: rotationAnimationDelay, options: [], animations: { 
                 self.arrow.transform = CGAffineTransform(rotationAngle: .pi)
             }, completion: nil)
-            arrowYConstraint = backgroundDimmingView.bottomAnchor.constraint(equalTo: arrow.topAnchor, constant: WalkthroughVC.textBubbleArrowOverlap - 1)
-            arrowXConstraint = arrow.centerXAnchor.constraint(equalTo: backgroundDimmingView.centerXAnchor)
-            activateAllArowConstraints()
+            arrowYConstraint = anchorView.bottomAnchor.constraint(equalTo: arrow.topAnchor, constant: WalkthroughVC.textBubbleArrowOverlap - 1)
+            arrowXConstraint = arrow.centerXAnchor.constraint(equalTo: anchorView.centerXAnchor)
+            activateAllArrowConstraints()
         } else {
             UIView.animate(withDuration: rotationAnimationDuration, delay: rotationAnimationDelay, options: [], animations: {
                 self.arrow.transform = .identity
             }, completion: nil)
-            arrowYConstraint = arrow.bottomAnchor.constraint(equalTo: backgroundDimmingView.topAnchor, constant: WalkthroughVC.textBubbleArrowOverlap - 1)
-            arrowXConstraint = arrow.centerXAnchor.constraint(equalTo: backgroundDimmingView.centerXAnchor)
-            activateAllArowConstraints()
+            arrowYConstraint = arrow.bottomAnchor.constraint(equalTo: anchorView.topAnchor, constant: WalkthroughVC.textBubbleArrowOverlap - 1)
+            arrowXConstraint = arrow.centerXAnchor.constraint(equalTo: anchorView.centerXAnchor)
+            activateAllArrowConstraints()
         }
     }
 
+    private func textBubbleAnchorView(withHighlightedView highlightedView: UIView) -> UIView {
+        if case .dimAndHighlight = settings.presentationMode {
+            return backgroundDimmingView
+        } else {
+            return highlightedView
+        }
+    }
     private func addHorizontalTextBubbleConstraints() {
         guard let parentVC = parent, let superView = parentVC.view else { return }
         let leftMarginConstraint = textBubble.leftAnchor.constraint(greaterThanOrEqualTo: superView.leftAnchor, constant: settings.minTextBubbleHorizontalMargin)
@@ -348,7 +377,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         textBubbleConstraints.append(contentsOf: [leftMarginConstraint, rightMarginConstraint])
     }
     
-    class func createArrowView(size: CGSize = CGSize(width: 25, height: WalkthroughVC.distanceBetweenTextBubbleAndHightlightedArea + WalkthroughVC.textBubbleArrowOverlap), color: UIColor) -> UIView {
+    class func createArrowView(size: CGSize = CGSize(width: 25, height: 12), color: UIColor) -> UIView {
         let arrowShapeLayer = CAShapeLayer()
         let origin = CGPoint(x: 0, y: 0)
         arrowShapeLayer.frame = CGRect(origin: origin, size: size)
@@ -376,7 +405,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         NSLayoutConstraint.deactivate(textBubbleConstraints)
     }
 
-    private func activateAllArowConstraints() {
+    private func activateAllArrowConstraints() {
         arrowXConstraint?.isActive = true
         arrowYConstraint?.isActive = true
     }
@@ -387,10 +416,12 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     }
 
     private func activateAllHighlightingConstraints() {
+        guard case .dimAndHighlight = settings.presentationMode else { return }
         NSLayoutConstraint.activate([highlightingViewWidthConstraint, highlightingViewHeightConstraint, highlightingViewCenterXConstraint, highlightingViewCenterYConstraint].compactMap { $0 })
     }
     
     private func deactivateAllHighlightingConstraints() {
+        guard case .dimAndHighlight = settings.presentationMode else { return }
         NSLayoutConstraint.deactivate([highlightingViewWidthConstraint, highlightingViewHeightConstraint, highlightingViewCenterXConstraint, highlightingViewCenterYConstraint].compactMap { $0 })
     }
 }

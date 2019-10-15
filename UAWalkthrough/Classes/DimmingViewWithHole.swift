@@ -6,9 +6,12 @@
 
 public class DimmingViewWithHole: UIView {
     
-    let dimmingAlpha = CGFloat(0.7)
+    let dimmingAlpha: CGFloat
+    let dimmingColor: UIColor
     
-    public override init(frame: CGRect) {
+    public init(frame: CGRect, dimmingColor: UIColor = .black, dimmingAlpha: CGFloat = 0.7) {
+        self.dimmingAlpha = dimmingAlpha
+        self.dimmingColor = dimmingColor
         super.init(frame: frame)
         
         let screenBounds = UIScreen.main.bounds
@@ -19,7 +22,7 @@ public class DimmingViewWithHole: UIView {
         let topDimmingView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
         topDimmingView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(topDimmingView)
-        topDimmingView.backgroundColor = UIColor.black.withAlphaComponent(dimmingAlpha)
+        topDimmingView.backgroundColor = dimmingColor.withAlphaComponent(dimmingAlpha)
         topDimmingView.bottomAnchor.constraint(equalTo: self.topAnchor).isActive = true
         topDimmingView.heightAnchor.constraint(equalToConstant: maxDimension).isActive = true
         topDimmingView.widthAnchor.constraint(equalToConstant: maxDimension*2).isActive = true
