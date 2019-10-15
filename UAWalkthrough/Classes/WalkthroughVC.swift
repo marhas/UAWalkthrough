@@ -95,18 +95,28 @@ public struct TextBubbleStyle {
     let shadowStyle: WalkthroughShadowStyle?
     let cornerRadius: Float
     let textInsets: UIEdgeInsets
+    let textBubbleYOffsetToHighlightedArea: CGFloat
+    let arrowSize: CGSize
 
-    public init(textColor: UIColor = UIColor(red: 190/255, green: 210/255, blue: 229/255, alpha: 1), backgroundColor: UIColor = UIColor(red: 46/255, green: 46/255, blue: 45/255, alpha: 1), shadowStyle: WalkthroughShadowStyle?, cornerRadius: Float = 6, textBubbleInsets: UIEdgeInsets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)) {
+    public init(textColor: UIColor = UIColor(red: 190/255, green: 210/255, blue: 229/255, alpha: 1),
+                backgroundColor: UIColor = UIColor(red: 46/255, green: 46/255, blue: 45/255, alpha: 1),
+                shadowStyle: WalkthroughShadowStyle?,
+                cornerRadius: Float = 6,
+                textInsets: UIEdgeInsets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16),
+                textBubbleYOffsetToHighlightedArea: CGFloat = 13,
+                arrowSize: CGSize = CGSize(width: 25, height: 16)
+                ) {
         self.textColor = textColor
         self.backgroundColor = backgroundColor
         self.shadowStyle = shadowStyle
         self.cornerRadius = cornerRadius
-        self.textInsets = textBubbleInsets
+        self.textInsets = textInsets
+        self.textBubbleYOffsetToHighlightedArea = textBubbleYOffsetToHighlightedArea
+        self.arrowSize = arrowSize
     }
 
-    public static let defaultCornerRadius = Float(6)
     public static let `default` = TextBubbleStyle(textColor: .tooltipText, backgroundColor: .tooltipBackground, shadowStyle: nil)
-    public static let white = TextBubbleStyle(textColor: .tooltipText, backgroundColor: .white, shadowStyle: .light, cornerRadius: defaultCornerRadius)
+    public static let white = TextBubbleStyle(textColor: .tooltipText, backgroundColor: .white, shadowStyle: .light, cornerRadius: 6)
 }
 
 public class WalkthroughVC: UIViewController, WalkthroughController {
@@ -144,7 +154,6 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     fileprivate var backgroundDimmingView: UIView! // DimmingViewWithHole!
     
     static let textBubbleBackgroundColor = UIColor.tooltipBackground
-    static let distanceBetweenTextBubbleAndHightlightedArea: CGFloat = 17
     static let textBubbleArrowOverlap = CGFloat(8)
 
     var textBubble: PaddingLabel = {
@@ -231,7 +240,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         textBubbleTransitionView.addSubview(arrow)
         backgroundDimmingView.bringSubviewToFront(textBubble)
 
-        let dummyWalkthroughItem = HighlightedItem(highlightedArea: parentVC.view, textLocation: .above, text: "")
+        let dummyWalkthroughItem = HighlightedItem(highlightedArea: parentVC.view, textLocation: .above, text: .plain(""))
         showWalkthroughItem(dummyWalkthroughItem, onView: parentVC.view)
         
         stepWalkthrough()
@@ -293,7 +302,12 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
             textBubbleTransitionView.heightAnchor.constraint(equalTo: textBubble.heightAnchor).isActive = true
         }
         textBubble.isHidden = false
-        textBubble.text = walkthroughItem.text
+        switch walkthroughItem.text {
+        case .attributed(let attributedString):
+            textBubble.attributedText = attributedString
+        case .plain(let plainText):
+            textBubble.text = plainText
+        }
 
         if let standaloneItem = walkthroughItem as? StandaloneItem {
             update(standaloneItem: standaloneItem)
@@ -331,9 +345,9 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
 
         let anchorView = textBubbleAnchorView(withHighlightedView: highlightedItem.highlightedArea)
         if highlightedItem.textLocation == .above {
-            textBubbleConstraints.append(textBubble.bottomAnchor.constraint(equalTo: anchorView.topAnchor, constant: -WalkthroughVC.distanceBetweenTextBubbleAndHightlightedArea))
+            textBubbleConstraints.append(textBubble.bottomAnchor.constraint(equalTo: anchorView.topAnchor, constant: -style.textBubbleYOffsetToHighlightedArea - style.arrowSize.height))
         } else {
-            textBubbleConstraints.append(textBubble.topAnchor.constraint(equalTo: anchorView.bottomAnchor, constant: WalkthroughVC.distanceBetweenTextBubbleAndHightlightedArea))
+            textBubbleConstraints.append(textBubble.topAnchor.constraint(equalTo: anchorView.bottomAnchor, constant: style.textBubbleYOffsetToHighlightedArea + style.arrowSize.height))
         }
 
         activateAllTextBubbleConstraints()
@@ -349,14 +363,14 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
             UIView.animate(withDuration: rotationAnimationDuration, delay: rotationAnimationDelay, options: [], animations: { 
                 self.arrow.transform = CGAffineTransform(rotationAngle: .pi)
             }, completion: nil)
-            arrowYConstraint = anchorView.bottomAnchor.constraint(equalTo: arrow.topAnchor, constant: WalkthroughVC.textBubbleArrowOverlap - 1)
+            arrowYConstraint = textBubbleTransitionView.topAnchor.constraint(equalTo: arrow.bottomAnchor)
             arrowXConstraint = arrow.centerXAnchor.constraint(equalTo: anchorView.centerXAnchor)
             activateAllArrowConstraints()
         } else {
             UIView.animate(withDuration: rotationAnimationDuration, delay: rotationAnimationDelay, options: [], animations: {
                 self.arrow.transform = .identity
             }, completion: nil)
-            arrowYConstraint = arrow.bottomAnchor.constraint(equalTo: anchorView.topAnchor, constant: WalkthroughVC.textBubbleArrowOverlap - 1)
+            arrowYConstraint = textBubbleTransitionView.bottomAnchor.constraint(equalTo: arrow.topAnchor)
             arrowXConstraint = arrow.centerXAnchor.constraint(equalTo: anchorView.centerXAnchor)
             activateAllArrowConstraints()
         }
@@ -427,24 +441,24 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
 }
 
 public protocol WalkthroughItem {
-    var text: String { get set }
+    var text: StyledText { get set }
 }
 
 public struct StandaloneItem: WalkthroughItem {
     public typealias LayoutHandler = (UIView) -> [NSLayoutConstraint]?
 
-    public init(centerOffset: CGPoint = CGPoint.zero, text: String, layoutHandler: LayoutHandler? = nil) {
+    public init(centerOffset: CGPoint = CGPoint.zero, text: StyledText, layoutHandler: LayoutHandler? = nil) {
         self.centerOffset = centerOffset
         self.text = text
         self.layoutHandler = layoutHandler
     }
     public var centerOffset: CGPoint
-    public var text: String
+    public var text: StyledText
     let layoutHandler: LayoutHandler?
 }
 
 public struct HighlightedItem: WalkthroughItem {
-    public init(highlightedArea: UIView, textLocation: TextLocation, text: String) {
+    public init(highlightedArea: UIView, textLocation: TextLocation, text: StyledText) {
         self.highlightedArea = highlightedArea
         self.textLocation = textLocation
         self.text = text
@@ -452,11 +466,16 @@ public struct HighlightedItem: WalkthroughItem {
 
     public var highlightedArea: UIView
     public var textLocation: TextLocation
-    public var text: String
+    public var text: StyledText
 
     public enum TextLocation {
         case above, below
     }
+}
+
+public enum StyledText {
+    case attributed(NSAttributedString)
+    case plain(String)
 }
 
 public protocol WalkthroughDelegate: class {
