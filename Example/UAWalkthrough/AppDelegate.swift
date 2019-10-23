@@ -3,7 +3,7 @@
 //  UAWalkthrough
 //
 //  Created by marhas on 02/13/2018.
-//  Copyright (c) 2018 marhas. All rights reserved.
+//  Copyright (c) 2018 Marcel Hasselaar. All rights reserved.
 //
 
 import UIKit

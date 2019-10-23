@@ -3,6 +3,7 @@
 //  UAWalkthrough
 //
 //  Created by Marcel Hasselaar on 2017-02-02.
+//  Copyright © 2017 Marcel Hasselaar. All rights reserved.
 
 public class DimmingViewWithHole: UIView {
     
