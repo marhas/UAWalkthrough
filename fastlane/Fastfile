@@ -1,5 +1,5 @@
 import_from_git(
-  url: 'git@bitbucket.org:unbadapps/unbadutils.git',
+  url: 'git@github.com:marhas/fastlane_shared.git',
   path: 'fastlane/Fastfile_shared'
 )
 

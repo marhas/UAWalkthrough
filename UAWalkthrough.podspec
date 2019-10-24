@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'UAWalkthrough'
-  s.version          = '1.0.13'
+  s.version          = '1.1.0'
   s.summary          = 'Create an onboarding experience for your app by highlighting and annotating its different elements.'
 
 # This description is used to generate tags and improve search results.
@@ -21,11 +21,11 @@ Pod::Spec.new do |s|
 Quickly onboard users to your app by highlighting important UI elements and create text bubbles with appropriate descriptions. Super easy to implement in your own project.
                        DESC
 
-  s.homepage         = 'https://bitbucket.org/unbadapps/unbadutils/wiki/Home'
+  s.homepage         = 'https://github.com/marhas/UAWalkthrough'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'marhas' => 'marcel@hasselaar.nu' }
-  s.source           = { :git => 'git@bitbucket.org:unbadapps/uawalkthrough.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/marhas/UAWalkthrough', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/mhasselaar'
   s.swift_version = "4.2"
 
