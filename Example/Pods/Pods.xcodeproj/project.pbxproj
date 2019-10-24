@@ -59,13 +59,13 @@
 		5BF274C2DEF332ED79B1CD15CFEC3498 /* ThrowError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E286B9A3CA7FCE64AA267CBEF4682D51 /* ThrowError.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		5D46A8BC0F198603A4AC2649C0B96ADD /* QuickTestSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6993558631F877FA082206FA003021C /* QuickTestSuite.swift */; };
 		5DBCC0E4C72649C9A39A00D40D944DDA /* Nimble-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C2B4EE34B662AA57C8981A7E42660D9 /* Nimble-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5F39460123618EB400421F79 /* UIView+Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F39460023618EB400421F79 /* UIView+Autolayout.swift */; };
 		5F73EED34F0B975B6EEABEC20940CE48 /* World+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = C369CE793024AD22D67676510BAF74BB /* World+DSL.swift */; };
 		5F9AFDECC14365CD10F3D83D50020E32 /* CwlMachBadInstructionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FA7DA19DC0A8E43ED839051EB1B5C66 /* CwlMachBadInstructionHandler.m */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		5F9EBFAB2033634100B28B8C /* WalkthroughVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9EBFA5203362BF00B28B8C /* WalkthroughVC.swift */; };
 		5F9EBFAC2033634700B28B8C /* DimmingViewWithHole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9EBFA4203362BF00B28B8C /* DimmingViewWithHole.swift */; };
 		5F9EBFB420338EA500B28B8C /* UIColor+utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9EBFB12033667D00B28B8C /* UIColor+utils.swift */; };
 		5F9EBFB520338EB400B28B8C /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9EBFB02033667D00B28B8C /* PaddingLabel.swift */; };
-		5FD5F2B32355C30E0020C64B /* UIView+Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD708AF2355BFA2009C38F7 /* UIView+Autolayout.swift */; };
 		6236BE5FA5B5B8A0B39104A94F3CD782 /* HaveValidSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3612030462D107BF373B18930C54AA8 /* HaveValidSnapshot.swift */; };
 		62D26CE7BA3AEDB4E5E87218FDCBBA90 /* Functional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CA3B9C2A51D7AADB8F4C6DCF48EDA4 /* Functional.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		62E86B6809F2EDBE69E78A89AC5E1966 /* SuiteHooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73732D2BDBC248B39BBFEBDAD9697F1A /* SuiteHooks.swift */; };
@@ -297,11 +297,11 @@
 		5972DEF6E1E52CBA5B71F172004C9AEA /* BeLogical.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BeLogical.swift; path = Sources/Nimble/Matchers/BeLogical.swift; sourceTree = "<group>"; };
 		5AC11D1D8ABC1AD353758D26B68DF9DF /* Nimble-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Nimble-dummy.m"; sourceTree = "<group>"; };
 		5DFE55DF4FD332B7D1E67786379FD744 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5F39460023618EB400421F79 /* UIView+Autolayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+Autolayout.swift"; path = "UAWalkthrough/Classes/UIView+Autolayout.swift"; sourceTree = "<group>"; };
 		5F9EBFA4203362BF00B28B8C /* DimmingViewWithHole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DimmingViewWithHole.swift; path = UAWalkthrough/Classes/DimmingViewWithHole.swift; sourceTree = "<group>"; };
 		5F9EBFA5203362BF00B28B8C /* WalkthroughVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalkthroughVC.swift; path = UAWalkthrough/Classes/WalkthroughVC.swift; sourceTree = "<group>"; };
 		5F9EBFB02033667D00B28B8C /* PaddingLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaddingLabel.swift; path = UAWalkthrough/Classes/PaddingLabel.swift; sourceTree = "<group>"; };
 		5F9EBFB12033667D00B28B8C /* UIColor+utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIColor+utils.swift"; path = "UAWalkthrough/Classes/UIColor+utils.swift"; sourceTree = "<group>"; };
-		5FD708AF2355BFA2009C38F7 /* UIView+Autolayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Autolayout.swift"; sourceTree = "<group>"; };
 		61E7D7F94796C8273534EBD4E460E922 /* XCTestObservationCenter+CurrentTestCaseTracker.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "XCTestObservationCenter+CurrentTestCaseTracker.h"; sourceTree = "<group>"; };
 		62F3724885AEE3A9FD220E7F2DE0CC84 /* DSL+Wait.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "DSL+Wait.swift"; path = "Sources/Nimble/DSL+Wait.swift"; sourceTree = "<group>"; };
 		63105B920EC55A2CC7444F7E0FAE8401 /* CwlBadInstructionException.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CwlBadInstructionException.swift; path = Carthage/Checkouts/CwlPreconditionTesting/Sources/CwlPreconditionTesting/CwlBadInstructionException.swift; sourceTree = "<group>"; };
@@ -503,10 +503,10 @@
 		062E0E32A0302EA89A841B392D42200C /* UAWalkthrough */ = {
 			isa = PBXGroup;
 			children = (
+				5F39460023618EB400421F79 /* UIView+Autolayout.swift */,
 				5F9EBFB02033667D00B28B8C /* PaddingLabel.swift */,
 				5F9EBFB12033667D00B28B8C /* UIColor+utils.swift */,
 				5F9EBFA4203362BF00B28B8C /* DimmingViewWithHole.swift */,
-				5FD708AF2355BFA2009C38F7 /* UIView+Autolayout.swift */,
 				5F9EBFA5203362BF00B28B8C /* WalkthroughVC.swift */,
 				034257BB42362985CD54357AEBA9BA3A /* Pod */,
 				70FA46D6249473311D8951CDD395F0FA /* Support Files */,
@@ -1244,7 +1244,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F9EBFAC2033634700B28B8C /* DimmingViewWithHole.swift in Sources */,
-				5FD5F2B32355C30E0020C64B /* UIView+Autolayout.swift in Sources */,
 				5F9EBFB520338EB400B28B8C /* PaddingLabel.swift in Sources */,
 				5F9EBFAB2033634100B28B8C /* WalkthroughVC.swift in Sources */,
 				39F884CCEB6EEB51B988429010B806FB /* UAWalkthrough-dummy.m in Sources */,
@@ -1287,6 +1286,7 @@
 				1AB7934C16CE49DE196FFC7BE7278287 /* SwiftSupport.swift in Sources */,
 				094973D2D2F1E3B2E772F93C8147C6B9 /* UIApplication+StrictKeyWindow.m in Sources */,
 				69DA8B003216466C60F029CBD79897F1 /* UIImage+Compare.m in Sources */,
+				5F39460123618EB400421F79 /* UIView+Autolayout.swift in Sources */,
 				35DD05FD595A6FE7F5A0692D12E319DC /* UIImage+Diff.m in Sources */,
 				756564ABAF2892FE7140C92A1CDDCF65 /* UIImage+Snapshot.m in Sources */,
 			);
