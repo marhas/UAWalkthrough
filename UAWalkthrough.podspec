@@ -25,7 +25,7 @@ Quickly onboard users to your app by highlighting important UI elements and crea
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'marhas' => 'marcel@hasselaar.nu' }
-  s.source           = { :git => 'https://github.com/marhas/UAWalkthrough', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/marhas/UAWalkthrough.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/mhasselaar'
   s.swift_version = "4.2"
 

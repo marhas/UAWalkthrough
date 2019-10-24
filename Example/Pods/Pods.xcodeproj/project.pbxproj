@@ -1516,7 +1516,9 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 1.1.0;
 				MODULEMAP_FILE = "Target Support Files/UAWalkthrough/UAWalkthrough.modulemap";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unbadapps.UAWalkthrough;
 				PRODUCT_NAME = UAWalkthrough;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1614,7 +1616,7 @@
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.unbadapps.Pods-UAWalkthrough-Example";
 				PRODUCT_NAME = Pods_UAWalkthrough_Example;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1799,7 +1801,9 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 1.1.0;
 				MODULEMAP_FILE = "Target Support Files/UAWalkthrough/UAWalkthrough.modulemap";
+				PRODUCT_BUNDLE_IDENTIFIER = com.unbadapps.UAWalkthrough;
 				PRODUCT_NAME = UAWalkthrough;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1835,7 +1839,7 @@
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.unbadapps.Pods-UAWalkthrough-Example";
 				PRODUCT_NAME = Pods_UAWalkthrough_Example;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;

@@ -231,13 +231,6 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         }
         backgroundDimmingView.addGestureRecognizer(tapGestureRecognizer)
 
-//        highlightingViewWidthConstraint = backgroundDimmingView.widthAnchor.constraint(equalToConstant: 0)
-//        highlightingViewHeightConstraint = backgroundDimmingView.heightAnchor.constraint(equalToConstant: 0)
-//        highlightingViewCenterXConstraint = backgroundDimmingView.centerXAnchor.constraint(equalTo: parentVC.view.centerXAnchor)
-//        highlightingViewCenterYConstraint = backgroundDimmingView.centerYAnchor.constraint(equalTo: parentVC.view.centerYAnchor)
-//
-//        activateAllHighlightingConstraints()
-
         textBubbleTransitionView.addSubview(arrow)
         backgroundDimmingView.bringSubviewToFront(textBubble)
 
