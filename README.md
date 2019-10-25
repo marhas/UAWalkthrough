@@ -19,7 +19,7 @@ Highly customizable and super easy to implement in your own project.
 
 ## Preview
 
-![Not pretty but gives you an idea](UAWalkthrough_demo.gif)
+![Not pretty but gives you an idea](https://raw.githubusercontent.com/marhas/UAWalkthrough/master/UAWalkthrough_demo.gif)
 
 
 ## Example
