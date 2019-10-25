@@ -58,7 +58,7 @@ Then, insert this line where you want to start the onboarding:
 startWalkthrough()
 ```
 
-You can customize the appearance by passing in a ```WalkthroughSettings``` and style it by passing in a ```TextBubbleStyle``.
+You can customize the appearance by passing in a ```WalkthroughSettings``` and style it by passing in a ```TextBubbleStyle```.
 For more advanced examples, check out the example app!
 
 
