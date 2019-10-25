@@ -59,8 +59,8 @@
 		5BF274C2DEF332ED79B1CD15CFEC3498 /* ThrowError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E286B9A3CA7FCE64AA267CBEF4682D51 /* ThrowError.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		5D46A8BC0F198603A4AC2649C0B96ADD /* QuickTestSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6993558631F877FA082206FA003021C /* QuickTestSuite.swift */; };
 		5DBCC0E4C72649C9A39A00D40D944DDA /* Nimble-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C2B4EE34B662AA57C8981A7E42660D9 /* Nimble-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5F39460123618EB400421F79 /* UIView+Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F39460023618EB400421F79 /* UIView+Autolayout.swift */; };
 		5F73EED34F0B975B6EEABEC20940CE48 /* World+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = C369CE793024AD22D67676510BAF74BB /* World+DSL.swift */; };
+		5F7BC8FD236322C2005274E6 /* UIView+Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F39460023618EB400421F79 /* UIView+Autolayout.swift */; };
 		5F9AFDECC14365CD10F3D83D50020E32 /* CwlMachBadInstructionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FA7DA19DC0A8E43ED839051EB1B5C66 /* CwlMachBadInstructionHandler.m */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		5F9EBFAB2033634100B28B8C /* WalkthroughVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9EBFA5203362BF00B28B8C /* WalkthroughVC.swift */; };
 		5F9EBFAC2033634700B28B8C /* DimmingViewWithHole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9EBFA4203362BF00B28B8C /* DimmingViewWithHole.swift */; };
@@ -1244,6 +1244,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F9EBFAC2033634700B28B8C /* DimmingViewWithHole.swift in Sources */,
+				5F7BC8FD236322C2005274E6 /* UIView+Autolayout.swift in Sources */,
 				5F9EBFB520338EB400B28B8C /* PaddingLabel.swift in Sources */,
 				5F9EBFAB2033634100B28B8C /* WalkthroughVC.swift in Sources */,
 				39F884CCEB6EEB51B988429010B806FB /* UAWalkthrough-dummy.m in Sources */,
@@ -1286,7 +1287,6 @@
 				1AB7934C16CE49DE196FFC7BE7278287 /* SwiftSupport.swift in Sources */,
 				094973D2D2F1E3B2E772F93C8147C6B9 /* UIApplication+StrictKeyWindow.m in Sources */,
 				69DA8B003216466C60F029CBD79897F1 /* UIImage+Compare.m in Sources */,
-				5F39460123618EB400421F79 /* UIView+Autolayout.swift in Sources */,
 				35DD05FD595A6FE7F5A0692D12E319DC /* UIImage+Diff.m in Sources */,
 				756564ABAF2892FE7140C92A1CDDCF65 /* UIImage+Snapshot.m in Sources */,
 			);
