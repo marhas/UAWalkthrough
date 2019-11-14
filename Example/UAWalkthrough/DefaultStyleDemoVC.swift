@@ -46,7 +46,7 @@ extension DefaultStyleDemoVC: WalkthroughProvider {
             HighlightedItem(highlightedArea: button1, textLocation: .below, text: .plain("Here's another button.")),
             HighlightedItem(highlightedArea: button2, textLocation: .below, text: .plain("This is yet another button. As long as the walkthrough runs the regular UI of the app is disabled. Tap the background to progress the walkthrough.")),
             HighlightedItem(highlightedArea: button3, textLocation: .above, text: .attributed(attributedString)),
-            StandaloneItem(centerOffset: CGPoint(x: 0, y: -120), text: .plain("This example uses a delegate to automatically switch tab when the walkthrough completes.")),
+            StandaloneItem(text: .plain("This example uses a delegate to automatically switch tab when the walkthrough completes."), centerOffset: CGPoint(x: 0, y: -120)),
         ]
     }
 }

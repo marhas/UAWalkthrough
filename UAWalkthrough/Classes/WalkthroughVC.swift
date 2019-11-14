@@ -30,10 +30,27 @@ public extension WalkthroughProvider {
     }
 }
 
+public extension UIViewController {
+    @discardableResult
+    func startWalkthrough(withWalkthroughProvider walkthroughProvider: WalkthroughProvider, settings: WalkthroughSettings = WalkthroughSettings(), style: TextBubbleStyle = .default, delegate: WalkthroughDelegate? = nil) -> WalkthroughController? {
+        guard !children.contains(where: { $0 is WalkthroughVC }) else { return nil }
+        let walkthroughVC = WalkthroughVC()
+        walkthroughVC.settings = settings
+        walkthroughVC.style = style
+        walkthroughVC.walkthroughDelegate = delegate
+        walkthroughVC.walkthroughProvider = walkthroughProvider
+
+        addChild(walkthroughVC)
+        walkthroughVC.didMove(toParent: self)
+        return walkthroughVC
+    }
+}
+
 public extension WalkthroughProvider where Self: UIViewController {
     @discardableResult
     func startWalkthrough(withSettings settings: WalkthroughSettings = WalkthroughSettings(), style: TextBubbleStyle = .default, delegate: WalkthroughDelegate? = nil, showEvenIfItHasAlreadyBeenCompleted: Bool = false) -> WalkthroughController? {
         guard !(hasCompletedWalkthrough && !showEvenIfItHasAlreadyBeenCompleted) else { return nil }
+        guard !children.contains(where: { $0 is WalkthroughVC }) else { return nil }
 
         let walkthroughVC = WalkthroughVC()
         walkthroughVC.settings = settings
@@ -198,8 +215,8 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
 
         guard let parentVC = parent else { return }
 
-        guard let walkthroughProvider = parent as? WalkthroughProvider else {
-            assert(false, "You must add WalkthroughVC to a view controller that implements the WalkthroughProvider protocol.")
+        guard let walkthroughProvider = parent as? WalkthroughProvider ?? self.walkthroughProvider else {
+            assert(false, "You must add WalkthroughVC to a view controller that implements the WalkthroughProvider protocol or pass a WalkthoughProvider to the startWalkthrough() function.")
             return
         }
         self.walkthroughProvider = walkthroughProvider
@@ -218,6 +235,10 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
             backgroundDimmingView = DimmingViewWithHole(frame: .zero, dimmingColor: dimmingColor, dimmingAlpha: dimmingLevel)
             parentVC.view.addSubview(backgroundDimmingView)
             backgroundDimmingView.translatesAutoresizingMaskIntoConstraints = false
+            highlightingViewWidthConstraint =  backgroundDimmingView.widthAnchor.constraint(equalTo: parentVC.view.widthAnchor)
+            highlightingViewHeightConstraint =  backgroundDimmingView.heightAnchor.constraint(equalTo: parentVC.view.heightAnchor)
+            highlightingViewCenterXConstraint = backgroundDimmingView.centerXAnchor.constraint(equalTo: parentVC.view.centerXAnchor)
+            highlightingViewCenterYConstraint = backgroundDimmingView.centerYAnchor.constraint(equalTo: parentVC.view.centerYAnchor)
         case .dim(let dimmingColor, let dimmingLevel):
             backgroundDimmingView = UIView()
             backgroundDimmingView.backgroundColor = dimmingColor.withAlphaComponent(dimmingLevel)
@@ -229,6 +250,11 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
             parentVC.view.addSubview(backgroundDimmingView)
             backgroundDimmingView.bound(inside: parentVC.view, considerSafeArea: false)
         }
+        backgroundDimmingView.alpha = 0
+        UIView.animate(withDuration: 0.5) {
+            self.backgroundDimmingView.alpha = 1
+        }
+
         backgroundDimmingView.addGestureRecognizer(tapGestureRecognizer)
 
         textBubbleTransitionView.addSubview(arrow)
@@ -279,7 +305,8 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
 
         self.updateTextBubble(walkthroughItem: walkthroughItem)
 
-        UIView.animate(withDuration: settings.stepAnimationDuration, animations: {
+        let animationDuration = currentWalkthroughItemIndex == 0 ? 0 : settings.stepAnimationDuration
+        UIView.animate(withDuration: animationDuration, animations: {
             view.layoutIfNeeded()
         })
     }
@@ -318,11 +345,14 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
             if let customConstraints = layoutHandler(self.textBubble) {
                 textBubbleConstraints = customConstraints
             }
-        } else {
-            let horizontalCenterConstraint = textBubble.centerXAnchor.constraint(equalTo: parentVC.view.centerXAnchor, constant: standaloneItem.centerOffset.x)
-            let verticalCenterConstraint = textBubble.centerYAnchor.constraint(equalTo: parentVC.view.centerYAnchor, constant: standaloneItem.centerOffset.y)
+        } else if let centerOffset = standaloneItem.centerOffset {
+            let horizontalCenterConstraint = textBubble.centerXAnchor.constraint(equalTo: parentVC.view.centerXAnchor, constant: centerOffset.x)
+            let verticalCenterConstraint = textBubble.centerYAnchor.constraint(equalTo: parentVC.view.centerYAnchor, constant: centerOffset.y)
             textBubbleConstraints = [horizontalCenterConstraint, verticalCenterConstraint]
             addHorizontalTextBubbleConstraints()
+        } else {
+            assert(false, "A StandAlone item needs to have either a layout handler or a center offset configured.")
+            return
         }
         arrow.isHidden = true
         arrowXConstraint = textBubble.centerXAnchor.constraint(equalTo: arrow.centerXAnchor)
@@ -441,12 +471,25 @@ public protocol WalkthroughItem {
 public struct StandaloneItem: WalkthroughItem {
     public typealias LayoutHandler = (UIView) -> [NSLayoutConstraint]?
 
-    public init(centerOffset: CGPoint = CGPoint.zero, text: StyledText, layoutHandler: LayoutHandler? = nil) {
+    public init(text: StyledText, centerOffset: CGPoint = CGPoint.zero) {
+        self.text = text
         self.centerOffset = centerOffset
+        layoutHandler = nil
+    }
+
+    public init(text: StyledText, layoutHandler: LayoutHandler? = nil) {
         self.text = text
         self.layoutHandler = layoutHandler
+        centerOffset = nil
     }
-    public var centerOffset: CGPoint
+
+    public init(text: StyledText) {
+        self.text = text
+        self.layoutHandler = nil
+        centerOffset = CGPoint.zero
+    }
+
+    public var centerOffset: CGPoint?
     public var text: StyledText
     let layoutHandler: LayoutHandler?
 }
