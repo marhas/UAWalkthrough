@@ -26,7 +26,7 @@ class CustomWalkthroughProviderVC: UIViewController {
         let walkthroughSettings = WalkthroughSettings(automaticWalkthroughDelaySeconds: 3, preferredBubbleMaxLayoutWidth: 250, presentationMode: .dim())
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
-            self.startWalkthrough(withWalkthroughProvider: self.walkthroughProvider, settings: walkthroughSettings, style: BubbleTextStyle.default, delegate: nil)
+            self.startWalkthrough(withWalkthroughProvider: self.walkthroughProvider, settings: walkthroughSettings, style: BubbleStyle.default, delegate: nil)
         }
     }
 }

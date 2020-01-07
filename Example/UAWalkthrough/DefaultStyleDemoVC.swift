@@ -23,7 +23,7 @@ class DefaultStyleDemoVC: UIViewController {
         let walkthroughSettings = WalkthroughSettings(automaticWalkthroughDelaySeconds: 3, preferredBubbleMaxLayoutWidth: 300, presentationMode: .dimAndHighlight())
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
-            self.startWalkthrough(withSettings: walkthroughSettings, style: BubbleTextStyle.default, delegate: self, showEvenIfItHasAlreadyBeenCompleted: true)
+            self.startWalkthrough(withSettings: walkthroughSettings, style: BubbleStyle.default, delegate: self, showEvenIfItHasAlreadyBeenCompleted: true)
         }
     }
 }

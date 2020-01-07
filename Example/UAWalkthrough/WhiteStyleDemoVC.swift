@@ -19,7 +19,7 @@ class WhiteStyleDemoVC: UIViewController {
     @IBOutlet weak var button4: UIButton!
 
     var walkthroughSettings = WalkthroughSettings(automaticWalkthroughDelaySeconds: 3, preferredBubbleMaxLayoutWidth: 300, presentationMode: .none)
-    var walkthroughStyle = BubbleTextStyle.white
+    var walkthroughStyle = BubbleStyle.white
 
     override func viewDidAppear(_ animated: Bool) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
@@ -45,7 +45,8 @@ extension WhiteStyleDemoVC: WalkthroughProvider {
                     bubble.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
                     bubble.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 220)
                 ]
-            }),
+            })
+            ,
             HighlightedItem(highlightedArea: slider, textLocation: .below, text: .plainText("It can be configured to progress automatically and/or require that the user taps the screen to move to the next element. This is by the way a UISlider.")),
             HighlightedItem(highlightedArea: button1, textLocation: .below, text: .plainText("If you press this button ... nothing happens.")),
             HighlightedItem(highlightedArea: button2, textLocation: .above, text: .attributedText(attributedString)),
