@@ -44,10 +44,10 @@ All you need to do to create an onboarding experience in your app is to add an e
 extension MyViewController: WalkthroughProvider {
     var walkthroughItems: [WalkthroughItem] {
         return [
-            StandaloneItem(text: .plain("This is a walkthrough of The App"),
-            HighlightedItem(highlightedArea: actionButton1, textLocation: .below, text: .plain("This button makes the app go BOOM.")),
-            HighlightedItem(highlightedArea: slider, textLocation: .above, text: .plain("Here's a slider for you.")),
-            StandaloneItem(centerOffset: CGPoint(x: 0, y: -120), text: .plain("That marks the end of the onboarding. Have fun!")),
+            StandaloneItem(text: .plainText("This is a walkthrough of The App"),
+            HighlightedItem(highlightedArea: actionButton1, textLocation: .below, text: .plainText("This button makes the app go BOOM.")),
+            HighlightedItem(highlightedArea: slider, textLocation: .above, text: .plainText("Here's a slider for you.")),
+            StandaloneItem(centerOffset: CGPoint(x: 0, y: -120), text: .plainText("That marks the end of the onboarding. Have fun!")),
         ]
     }
 }

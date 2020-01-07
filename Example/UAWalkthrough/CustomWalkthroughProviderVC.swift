@@ -23,18 +23,18 @@ class CustomWalkthroughProviderVC: UIViewController {
     private let walkthroughProvider = MyCustomWalkthroughProvider()
 
     override func viewDidAppear(_ animated: Bool) {
-        let walkthroughSettings = WalkthroughSettings(automaticWalkthroughDelaySeconds: 3, preferredTextBubbleMaxLayoutWidth: 250, presentationMode: .dim())
+        let walkthroughSettings = WalkthroughSettings(automaticWalkthroughDelaySeconds: 3, preferredBubbleMaxLayoutWidth: 250, presentationMode: .dim())
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
-            self.startWalkthrough(withWalkthroughProvider: self.walkthroughProvider, settings: walkthroughSettings, style: TextBubbleStyle.default, delegate: nil)
+            self.startWalkthrough(withWalkthroughProvider: self.walkthroughProvider, settings: walkthroughSettings, style: BubbleTextStyle.default, delegate: nil)
         }
     }
 }
 
 class MyCustomWalkthroughProvider: WalkthroughProvider {
     var walkthroughItems: [WalkthroughItem] = [
-        StandaloneItem(text: .plain("This demonstrates an alternative approach for configuring a walkthrough.")),
-        StandaloneItem(text: .plain("Hej")),
-        StandaloneItem(text: .plain("Hopp"))
+        StandaloneItem(text: .plainText("This demonstrates an alternative approach for configuring a walkthrough.")),
+        StandaloneItem(text: .plainText("Hej")),
+        StandaloneItem(text: .plainText("Hopp"))
     ]
 }
