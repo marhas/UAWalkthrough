@@ -25,6 +25,10 @@ class WhiteStyleDemoVC: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
             self.startWalkthrough(withSettings: self.walkthroughSettings, style: self.walkthroughStyle, delegate: self, showEvenIfItHasAlreadyBeenCompleted: true)
         }
+
+        let bubbleStyle = BubbleStyle(textColor: .white, backgroundColor: .orange, shadowStyle: .dark, cornerRadius: 20, yOffsetToHighlightedArea: 2)
+        let bubbleItem = HighlightedItem(highlightedArea: button1, textLocation: .below, text: .plainText("This is a standalone bubble"))
+        let bubbleView = showBubble(withWalkthroughItem: bubbleItem, minBubbleHorizontalMargin: 20, preferredBubbleMaxLayoutWidth: 300, style: bubbleStyle)
     }
 
     @IBAction func restartWalkthrough(_ sender: Any) {

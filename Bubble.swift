@@ -13,20 +13,21 @@ public class Bubble: UIView {
         fatalError("Not implemented")
     }
 
-    init(bubbleBackgroundColor: UIColor = .white, minBubbleHorizontalMargin: CGFloat = 0, yOffsetToHighlightedArea: CGFloat = 8, arrowSize: CGSize = CGSize(width: 25, height: 12)) {
+    init(preferredMaxLayoutWidth: CGFloat? = nil, minBubbleHorizontalMargin: CGFloat = 0, animationDuration: Double = 0.35, style: BubbleStyle = .default) {
         self.minBubbleHorizontalMargin = minBubbleHorizontalMargin
-        self.yOffsetToHighlightedArea = yOffsetToHighlightedArea
-        self.arrowSize = arrowSize
-        arrow = ArrowView(size: arrowSize, color: bubbleBackgroundColor)
+        self.animationDuration = animationDuration
 
         super.init(frame: CGRect.zero)
-        translatesAutoresizingMaskIntoConstraints = false
 
+        translatesAutoresizingMaskIntoConstraints = false
+        if let preferredMaxLayoutWidth = preferredMaxLayoutWidth {
+            textLabel.preferredMaxLayoutWidth = preferredMaxLayoutWidth
+        }
         addSubview(roundedCornerView)
         roundedCornerView.bound(inside: self)
-        roundedCornerView.backgroundColor = bubbleBackgroundColor
-        addSubview(arrow)
         backgroundColor = .clear
+
+        defer { self.style = style }
     }
 
     func configure(withWalkthroughItem walkthroughItem: WalkthroughItem, anchorView: UIView? = nil) {
@@ -37,7 +38,6 @@ public class Bubble: UIView {
         if let standaloneItem = walkthroughItem as? StandaloneItem {
             configure(withStandaloneItem: standaloneItem, anchorView: anchorView)
         } else if let highlightedItem = walkthroughItem as? HighlightedItem {
-            guard let anchorView = anchorView ?? superview else { return }
             configure(withHighlightedItem: highlightedItem, anchorView: anchorView)
         }
     }
@@ -47,9 +47,11 @@ public class Bubble: UIView {
             if let customConstraints = layoutHandler(self) {
                 bubbleConstraints = customConstraints
             }
-        } else if let centerOffset = standaloneItem.centerOffset, let anchorView = anchorView {
+        } else if let centerOffset = standaloneItem.centerOffset, let anchorView = superview {
             let horizontalCenterConstraint = centerXAnchor.constraint(equalTo: anchorView.centerXAnchor, constant: centerOffset.x)
+            horizontalCenterConstraint.priority = .defaultLow
             let verticalCenterConstraint = centerYAnchor.constraint(equalTo: anchorView.centerYAnchor, constant: centerOffset.y)
+            verticalCenterConstraint.priority = .defaultLow
             bubbleConstraints = [horizontalCenterConstraint, verticalCenterConstraint]
             addHorizontalMarginConstraints()
         } else {
@@ -63,16 +65,17 @@ public class Bubble: UIView {
         activateAllBubbleConstraints()
     }
 
-    private func configure(withHighlightedItem highlightedItem: HighlightedItem, anchorView: UIView) {
+    private func configure(withHighlightedItem highlightedItem: HighlightedItem, anchorView: UIView?) {
+        let anchorView = anchorView ?? highlightedItem.highlightedArea
         let centerConstraint = centerXAnchor.constraint(equalTo: highlightedItem.highlightedArea.centerXAnchor)
         centerConstraint.priority = .defaultLow
         bubbleConstraints = [centerConstraint]
         addHorizontalMarginConstraints()
 
         if highlightedItem.textLocation == .above {
-            bubbleConstraints.append(bottomAnchor.constraint(equalTo: anchorView.topAnchor, constant: -yOffsetToHighlightedArea - arrowSize.height))
+            bubbleConstraints.append(bottomAnchor.constraint(equalTo: anchorView.topAnchor, constant: -style.yOffsetToHighlightedArea - style.arrowSize.height))
         } else {
-            bubbleConstraints.append(topAnchor.constraint(equalTo: anchorView.bottomAnchor, constant: yOffsetToHighlightedArea + arrowSize.height))
+            bubbleConstraints.append(topAnchor.constraint(equalTo: anchorView.bottomAnchor, constant: style.yOffsetToHighlightedArea + style.arrowSize.height))
         }
 
         activateAllBubbleConstraints()
@@ -81,11 +84,10 @@ public class Bubble: UIView {
 
         arrow.isHidden = false
 
-        // The rotation of the arrow should happen so that is is not visible. Hence it doesn't even need to be animated, but it is easier to get the timing right that way
-        //        let rotationAnimationDuration = settings.stepAnimationDuration / 3.0
-        // TODO
-        let rotationAnimationDuration = 0.0
-        let rotationAnimationDelay = 0.15
+        // By rotating the arrow exactly at the middle of the animation should have it rotated while not visible.
+        // Using a arrow larger than then bubble will still look weird though as it will not be completely hidden during rotation.
+        let rotationAnimationDuration = animationDuration / 2 + 0.0000001
+        let rotationAnimationDelay = rotationAnimationDuration / 2
         if highlightedItem.textLocation == .below {
             UIView.animate(withDuration: rotationAnimationDuration, delay: rotationAnimationDelay, options: [], animations: {
                 self.arrow.transform = CGAffineTransform(rotationAngle: .pi)
@@ -115,7 +117,10 @@ public class Bubble: UIView {
             textLabel.textColor = style.textColor
             textLabel.backgroundColor = style.backgroundColor
             textLabel.insets = style.textInsets
-            arrow.color = style.backgroundColor
+            deactivateAllArrowConstraints()
+            arrow?.removeFromSuperview()
+            arrow = ArrowView(size: style.arrowSize, color: style.backgroundColor)
+            insertSubview(arrow, belowSubview: roundedCornerView)
             roundedCornerView.backgroundColor = style.backgroundColor
 
             if let shadowStyle = style.shadowStyle {
@@ -135,6 +140,10 @@ public class Bubble: UIView {
         self.customView = customView
         customView.bound(inside: roundedCornerView)
         textLabel.isHidden = true
+        UIView.animate(withDuration: 0.001) {
+            customView.layoutIfNeeded()
+            self.roundedCornerView.layoutIfNeeded()
+        }
     }
 
     private func configure(withTextContent textContent: Content) {
@@ -152,10 +161,14 @@ public class Bubble: UIView {
         textLabel.isHidden = false
     }
 
+    var outerView: UIView? {
+        superview is DimmingViewWithHole ? superview?.superview : superview
+    }
+
     private func addHorizontalMarginConstraints() {
-        guard let superView = superview else { return }
-        let leftMarginConstraint = leftAnchor.constraint(greaterThanOrEqualTo: superView.leftAnchor, constant: minBubbleHorizontalMargin)
-        let rightMarginConstraint = superView.rightAnchor.constraint(greaterThanOrEqualTo: rightAnchor, constant: minBubbleHorizontalMargin)
+        guard let outerView = outerView else { return }
+        let leftMarginConstraint = leftAnchor.constraint(greaterThanOrEqualTo: outerView.leftAnchor, constant: minBubbleHorizontalMargin)
+        let rightMarginConstraint = outerView.rightAnchor.constraint(greaterThanOrEqualTo: rightAnchor, constant: minBubbleHorizontalMargin)
 
         bubbleConstraints.append(contentsOf: [leftMarginConstraint, rightMarginConstraint])
     }
@@ -165,7 +178,6 @@ public class Bubble: UIView {
     lazy var textLabel: PaddingLabel = {
         let bubblePaddingLabel = PaddingLabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0), insets: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
         bubblePaddingLabel.backgroundColor = style.backgroundColor
-        bubblePaddingLabel.backgroundColor = UIColor.green.withAlphaComponent(0.5)
         bubblePaddingLabel.textColor = .tooltipText
         bubblePaddingLabel.translatesAutoresizingMaskIntoConstraints = false
         bubblePaddingLabel.lineBreakMode = .byWordWrapping
@@ -192,29 +204,9 @@ public class Bubble: UIView {
         arrowYConstraint?.isActive = false
     }
 
-//    static private func createArrowView(size: CGSize = CGSize(width: 25, height: 12), color: UIColor) -> UIView {
-//        let arrowShapeLayer = CAShapeLayer()
-//        let origin = CGPoint(x: 0, y: 0)
-//        arrowShapeLayer.frame = CGRect(origin: origin, size: size)
-//        let arrowPath = UIBezierPath()
-//        arrowPath.move(to: origin)
-//        arrowPath.addLine(to: CGPoint(x: size.width/2, y: size.height))
-//        arrowPath.addLine(to: CGPoint(x: size.width, y: 0))
-//        arrowPath.close()
-//        arrowShapeLayer.path = arrowPath.cgPath
-//        arrowShapeLayer.fillColor = color.cgColor
-//        let view = UIView(frame: arrowShapeLayer.frame)
-//        view.backgroundColor = .clear
-//        view.layer.addSublayer(arrowShapeLayer)
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        view.widthAnchor.constraint(equalToConstant: size.width).isActive = true
-//        view.heightAnchor.constraint(equalToConstant: size.height).isActive = true
-//        return view
-//    }
-
     private let minBubbleHorizontalMargin: CGFloat
-    private let yOffsetToHighlightedArea: CGFloat
-    private let arrowSize: CGSize
+    private let animationDuration: Double
+
     private static let defaultCornerRadius: CGFloat = 12.0
     private let roundedCornerView: UIView = {
         let roundedCornerView = UIView()
@@ -226,7 +218,7 @@ public class Bubble: UIView {
         return roundedCornerView
     }()
 
-    var arrow: ArrowView
+    var arrow: ArrowView!
 
     fileprivate var bubbleConstraints = [NSLayoutConstraint]()
     fileprivate var arrowXConstraint: NSLayoutConstraint?
@@ -242,16 +234,9 @@ class ArrowView: UIView {
         backgroundColor = .clear
         translatesAutoresizingMaskIntoConstraints = false
         layer.addSublayer(arrowLayer)
-//        widthAnchor.constraint(equalToConstant: size.width).isActive = true
-//        heightAnchor.constraint(equalToConstant: size.height).isActive = true
-
+        widthAnchor.constraint(equalToConstant: size.width).isActive = true
+        heightAnchor.constraint(equalToConstant: size.height).isActive = true
     }
-
-//    init(size: CGSize, color: UIColor) {
-//        super.init(frame: fr)
-//        let view = UIView(frame: arrowShapeLayer.frame)
-//
-//    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

@@ -66,8 +66,10 @@ public extension UIViewController {
         return walkthroughVC
     }
 
+    @discardableResult
     func showBubble(withWalkthroughItem walkthroughItem: WalkthroughItem, minBubbleHorizontalMargin: CGFloat, preferredBubbleMaxLayoutWidth: CGFloat, style: BubbleStyle = .default) -> Bubble {
-        let bubble = Bubble()
+        let bubble = Bubble(preferredMaxLayoutWidth: preferredBubbleMaxLayoutWidth, minBubbleHorizontalMargin: minBubbleHorizontalMargin, style: style)
+        view.addSubview(bubble)
         bubble.configure(withWalkthroughItem: walkthroughItem)
         return bubble
     }
@@ -138,7 +140,7 @@ public struct BubbleStyle {
     let shadowStyle: WalkthroughShadowStyle?
     let cornerRadius: Float
     let textInsets: UIEdgeInsets
-    let bubbleYOffsetToHighlightedArea: CGFloat
+    let yOffsetToHighlightedArea: CGFloat
     let arrowSize: CGSize
 
     public init(textColor: UIColor = UIColor(red: 190/255, green: 210/255, blue: 229/255, alpha: 1),
@@ -146,7 +148,7 @@ public struct BubbleStyle {
                 shadowStyle: WalkthroughShadowStyle?,
                 cornerRadius: Float = 6,
                 textInsets: UIEdgeInsets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16),
-                bubbleYOffsetToHighlightedArea: CGFloat = 13,
+                yOffsetToHighlightedArea: CGFloat = 8,
                 arrowSize: CGSize = CGSize(width: 25, height: 16)
                 ) {
         self.textColor = textColor
@@ -154,7 +156,7 @@ public struct BubbleStyle {
         self.shadowStyle = shadowStyle
         self.cornerRadius = cornerRadius
         self.textInsets = textInsets
-        self.bubbleYOffsetToHighlightedArea = bubbleYOffsetToHighlightedArea
+        self.yOffsetToHighlightedArea = yOffsetToHighlightedArea
         self.arrowSize = arrowSize
     }
 
@@ -163,41 +165,11 @@ public struct BubbleStyle {
 }
 
 public class WalkthroughVC: UIViewController, WalkthroughController {
-
-    func configure(settings: WalkthroughSettings, style: BubbleStyle, delegate: WalkthroughDelegate?, completion: (() -> Void)?) {
-        view.translatesAutoresizingMaskIntoConstraints = false
-        self.settings = settings
-        self.walkthroughDelegate = delegate
-        self.completion = completion
-        bubble.style = style
-    }
-
-    fileprivate var settings = WalkthroughSettings() {
-        didSet {
-            bubble.textLabel.preferredMaxLayoutWidth = settings.preferredBubbleMaxLayoutWidth
-        }
-    }
-
-    fileprivate var highlightingViewCenterXConstraint: NSLayoutConstraint?
-    fileprivate var highlightingViewCenterYConstraint: NSLayoutConstraint?
-    fileprivate var highlightingViewHeightConstraint: NSLayoutConstraint?
-    fileprivate var highlightingViewWidthConstraint: NSLayoutConstraint?
-    fileprivate var stepWalkthroughTimer: Timer?
-    
-    weak var weaklyRetainedWalkthroughProvider: WalkthroughProvider?
-    var stronglyRetainedWalkthroughProvider: WalkthroughProvider? = nil
     var walkthroughProvider: WalkthroughProvider? {
         return stronglyRetainedWalkthroughProvider ?? weaklyRetainedWalkthroughProvider
     }
     weak var walkthroughDelegate: WalkthroughDelegate?
     var completion: (() -> Void)?
-    fileprivate var backgroundDimmingView: UIView!
-    
-    private var bubble = Bubble()
-
-    var currentWalkthroughItemIndex = 0
-    
-    let tapGestureRecognizer = UITapGestureRecognizer()
 
     static public func forgetCompletedWalkthrougs() {
         let defaults = UserDefaults.standard.dictionaryRepresentation()
@@ -233,8 +205,8 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
             backgroundDimmingView = DimmingViewWithHole(frame: .zero, dimmingColor: dimmingColor, dimmingAlpha: dimmingLevel)
             parentVC.view.addSubview(backgroundDimmingView)
             backgroundDimmingView.translatesAutoresizingMaskIntoConstraints = false
-            highlightingViewWidthConstraint =  backgroundDimmingView.widthAnchor.constraint(equalTo: parentVC.view.widthAnchor)
-            highlightingViewHeightConstraint =  backgroundDimmingView.heightAnchor.constraint(equalTo: parentVC.view.heightAnchor)
+            highlightingViewWidthConstraint = backgroundDimmingView.widthAnchor.constraint(equalTo: parentVC.view.widthAnchor)
+            highlightingViewHeightConstraint = backgroundDimmingView.heightAnchor.constraint(equalTo: parentVC.view.heightAnchor)
             highlightingViewCenterXConstraint = backgroundDimmingView.centerXAnchor.constraint(equalTo: parentVC.view.centerXAnchor)
             highlightingViewCenterYConstraint = backgroundDimmingView.centerYAnchor.constraint(equalTo: parentVC.view.centerYAnchor)
         case .dim(let dimmingColor, let dimmingLevel):
@@ -276,7 +248,15 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         completion?()
     }
 
-    @objc func stepWalkthrough() {
+    fileprivate func configure(settings: WalkthroughSettings, style: BubbleStyle, delegate: WalkthroughDelegate?, completion: (() -> Void)?) {
+        view.translatesAutoresizingMaskIntoConstraints = false
+        self.settings = settings
+        self.walkthroughDelegate = delegate
+        self.completion = completion
+        bubble = Bubble(preferredMaxLayoutWidth: settings.preferredBubbleMaxLayoutWidth, minBubbleHorizontalMargin: settings.minBubbleHorizontalMargin, animationDuration: settings.stepAnimationDuration, style: style)
+    }
+
+    @objc private func stepWalkthrough() {
         stepWalkthroughTimer?.invalidate()
         guard let walkthroughProvider = walkthroughProvider, let parentVC = parent, currentWalkthroughItemIndex < walkthroughProvider.walkthroughItems.count else {
             self.walkthroughProvider?.hasCompletedWalkthrough = true
@@ -294,14 +274,14 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         deactivateAllHighlightingConstraints()
 
         if let hightlightedItem = walkthroughItem as? HighlightedItem {
-            highlightingViewWidthConstraint =  backgroundDimmingView.widthAnchor.constraint(equalTo: hightlightedItem.highlightedArea.widthAnchor, multiplier: 1, constant: settings.highlightingOffset.x)
-            highlightingViewHeightConstraint =  backgroundDimmingView.heightAnchor.constraint(equalTo: hightlightedItem.highlightedArea.heightAnchor, multiplier: 1, constant: settings.highlightingOffset.y)
+            highlightingViewWidthConstraint = backgroundDimmingView.widthAnchor.constraint(equalTo: hightlightedItem.highlightedArea.widthAnchor, multiplier: 1, constant: settings.highlightingOffset.x)
+            highlightingViewHeightConstraint = backgroundDimmingView.heightAnchor.constraint(equalTo: hightlightedItem.highlightedArea.heightAnchor, multiplier: 1, constant: settings.highlightingOffset.y)
 
             highlightingViewCenterXConstraint = backgroundDimmingView.centerXAnchor.constraint(equalTo: hightlightedItem.highlightedArea.centerXAnchor)
             highlightingViewCenterYConstraint = backgroundDimmingView.centerYAnchor.constraint(equalTo: hightlightedItem.highlightedArea.centerYAnchor)
         } else {
-            highlightingViewWidthConstraint = backgroundDimmingView.widthAnchor.constraint(equalToConstant: 1)
-            highlightingViewHeightConstraint = backgroundDimmingView.heightAnchor.constraint(equalToConstant: 1)
+            // This is to make the hole in the dimming view disappear in a controlled fashion
+            highlightingViewHeightConstraint = backgroundDimmingView.heightAnchor.constraint(equalToConstant: 0)
         }
         activateAllHighlightingConstraints()
 
@@ -318,18 +298,18 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
             backgroundDimmingView.addSubview(bubble)
         }
         bubble.isHidden = false
-        let anchorView = bubbleAnchorView(withWalkthroughItem: walkthroughItem)
-        bubble.configure(withWalkthroughItem: walkthroughItem, anchorView: anchorView)
+//        let anchorView = bubbleAnchorView(withWalkthroughItem: walkthroughItem)
+        bubble.configure(withWalkthroughItem: walkthroughItem, anchorView: nil)
     }
 
-    private func bubbleAnchorView(withWalkthroughItem walkthroughItem: WalkthroughItem) -> UIView? {
-        guard let highlightedItem = walkthroughItem as? HighlightedItem else { return parent?.view }
-        if case .dimAndHighlight = settings.presentationMode {
-            return backgroundDimmingView
-        } else {
-            return highlightedItem.highlightedArea
-        }
-    }
+//    private func bubbleAnchorView(withWalkthroughItem walkthroughItem: WalkthroughItem) -> UIView? {
+//        guard let highlightedItem = walkthroughItem as? HighlightedItem else { return parent?.view }
+//        if case .dimAndHighlight = settings.presentationMode {
+//            return backgroundDimmingView
+//        } else {
+//            return highlightedItem.highlightedArea
+//        }
+//    }
 
     private func activateAllHighlightingConstraints() {
         guard case .dimAndHighlight = settings.presentationMode else { return }
@@ -340,6 +320,20 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         guard case .dimAndHighlight = settings.presentationMode else { return }
         NSLayoutConstraint.deactivate([highlightingViewWidthConstraint, highlightingViewHeightConstraint, highlightingViewCenterXConstraint, highlightingViewCenterYConstraint].compactMap { $0 })
     }
+
+    fileprivate var settings = WalkthroughSettings()
+    fileprivate var highlightingViewCenterXConstraint: NSLayoutConstraint?
+    fileprivate var highlightingViewCenterYConstraint: NSLayoutConstraint?
+    fileprivate var highlightingViewHeightConstraint: NSLayoutConstraint?
+    fileprivate var highlightingViewWidthConstraint: NSLayoutConstraint?
+    fileprivate var stepWalkthroughTimer: Timer?
+    fileprivate weak var weaklyRetainedWalkthroughProvider: WalkthroughProvider?
+    fileprivate var stronglyRetainedWalkthroughProvider: WalkthroughProvider? = nil
+    fileprivate var backgroundDimmingView: UIView!
+
+    private var bubble: Bubble!
+    private var currentWalkthroughItemIndex = 0
+    private let tapGestureRecognizer = UITapGestureRecognizer()
 }
 
 public protocol WalkthroughItem {
