@@ -68,7 +68,7 @@ public extension UIViewController {
 
     @discardableResult
     func showBubble(withWalkthroughItem walkthroughItem: WalkthroughItem, minBubbleHorizontalMargin: CGFloat, preferredBubbleMaxLayoutWidth: CGFloat, style: BubbleStyle = .default) -> Bubble {
-        let bubble = Bubble(preferredMaxLayoutWidth: preferredBubbleMaxLayoutWidth, minBubbleHorizontalMargin: minBubbleHorizontalMargin, style: style)
+        let bubble = Bubble(preferredMaxLayoutWidth: preferredBubbleMaxLayoutWidth, minBubbleHorizontalMargin: minBubbleHorizontalMargin, animationDuration: 0, style: style)
         view.addSubview(bubble)
         bubble.configure(withWalkthroughItem: walkthroughItem)
         return bubble
@@ -138,7 +138,7 @@ public struct BubbleStyle {
     let textColor: UIColor
     let backgroundColor: UIColor
     let shadowStyle: WalkthroughShadowStyle?
-    let cornerRadius: Float
+    let cornerRadius: CGFloat
     let textInsets: UIEdgeInsets
     let yOffsetToHighlightedArea: CGFloat
     let arrowSize: CGSize
@@ -146,7 +146,7 @@ public struct BubbleStyle {
     public init(textColor: UIColor = UIColor(red: 190/255, green: 210/255, blue: 229/255, alpha: 1),
                 backgroundColor: UIColor = UIColor(red: 46/255, green: 46/255, blue: 45/255, alpha: 1),
                 shadowStyle: WalkthroughShadowStyle?,
-                cornerRadius: Float = 6,
+                cornerRadius: CGFloat = 6,
                 textInsets: UIEdgeInsets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16),
                 yOffsetToHighlightedArea: CGFloat = 8,
                 arrowSize: CGSize = CGSize(width: 25, height: 16)
@@ -298,18 +298,8 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
             backgroundDimmingView.addSubview(bubble)
         }
         bubble.isHidden = false
-//        let anchorView = bubbleAnchorView(withWalkthroughItem: walkthroughItem)
-        bubble.configure(withWalkthroughItem: walkthroughItem, anchorView: nil)
+        bubble.configure(withWalkthroughItem: walkthroughItem)
     }
-
-//    private func bubbleAnchorView(withWalkthroughItem walkthroughItem: WalkthroughItem) -> UIView? {
-//        guard let highlightedItem = walkthroughItem as? HighlightedItem else { return parent?.view }
-//        if case .dimAndHighlight = settings.presentationMode {
-//            return backgroundDimmingView
-//        } else {
-//            return highlightedItem.highlightedArea
-//        }
-//    }
 
     private func activateAllHighlightingConstraints() {
         guard case .dimAndHighlight = settings.presentationMode else { return }

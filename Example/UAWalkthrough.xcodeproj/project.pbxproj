@@ -115,14 +115,14 @@
 		607FACD21AFB9204008FA782 /* Example for UAWalkthrough */ = {
 			isa = PBXGroup;
 			children = (
-				5FDECDCA2379542A00179371 /* CustomWalkthroughProviderVC.swift */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
+				5FDECDCA2379542A00179371 /* CustomWalkthroughProviderVC.swift */,
 				5F3945FC235F37E600421F79 /* DefaultStyleDemoVC.swift */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
-				607FACD71AFB9204008FA782 /* WhiteStyleDemoVC.swift */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
+				607FACD71AFB9204008FA782 /* WhiteStyleDemoVC.swift */,
 			);
 			name = "Example for UAWalkthrough";
 			path = UAWalkthrough;

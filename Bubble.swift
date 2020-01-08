@@ -23,6 +23,7 @@ public class Bubble: UIView {
         if let preferredMaxLayoutWidth = preferredMaxLayoutWidth {
             textLabel.preferredMaxLayoutWidth = preferredMaxLayoutWidth
         }
+        roundedCornerView = createRoundedCornerView(cornerRadius: style.cornerRadius)
         addSubview(roundedCornerView)
         roundedCornerView.bound(inside: self)
         backgroundColor = .clear
@@ -30,28 +31,28 @@ public class Bubble: UIView {
         defer { self.style = style }
     }
 
-    func configure(withWalkthroughItem walkthroughItem: WalkthroughItem, anchorView: UIView? = nil) {
+    func configure(withWalkthroughItem walkthroughItem: WalkthroughItem) {
         deactivateAllBubbleConstraints()
         deactivateAllArrowConstraints()
 
         configureContent(walkthroughItem.content)
         if let standaloneItem = walkthroughItem as? StandaloneItem {
-            configure(withStandaloneItem: standaloneItem, anchorView: anchorView)
+            configure(withStandaloneItem: standaloneItem)
         } else if let highlightedItem = walkthroughItem as? HighlightedItem {
-            configure(withHighlightedItem: highlightedItem, anchorView: anchorView)
+            configure(withHighlightedItem: highlightedItem)
         }
     }
 
-    private func configure(withStandaloneItem standaloneItem: StandaloneItem, anchorView: UIView?) {
+    private func configure(withStandaloneItem standaloneItem: StandaloneItem) {
         if let layoutHandler = standaloneItem.layoutHandler {
             if let customConstraints = layoutHandler(self) {
                 bubbleConstraints = customConstraints
             }
-        } else if let centerOffset = standaloneItem.centerOffset, let anchorView = superview {
-            let horizontalCenterConstraint = centerXAnchor.constraint(equalTo: anchorView.centerXAnchor, constant: centerOffset.x)
-            horizontalCenterConstraint.priority = .defaultLow
-            let verticalCenterConstraint = centerYAnchor.constraint(equalTo: anchorView.centerYAnchor, constant: centerOffset.y)
-            verticalCenterConstraint.priority = .defaultLow
+        } else if let centerOffset = standaloneItem.centerOffset, let outerView = outerView {
+            let horizontalCenterConstraint = centerXAnchor.constraint(equalTo: outerView.centerXAnchor, constant: centerOffset.x)
+            horizontalCenterConstraint.priority = superlowLayoutPriority
+            let verticalCenterConstraint = centerYAnchor.constraint(equalTo: outerView.centerYAnchor, constant: centerOffset.y)
+            verticalCenterConstraint.priority = superlowLayoutPriority
             bubbleConstraints = [horizontalCenterConstraint, verticalCenterConstraint]
             addHorizontalMarginConstraints()
         } else {
@@ -65,17 +66,16 @@ public class Bubble: UIView {
         activateAllBubbleConstraints()
     }
 
-    private func configure(withHighlightedItem highlightedItem: HighlightedItem, anchorView: UIView?) {
-        let anchorView = anchorView ?? highlightedItem.highlightedArea
+    private func configure(withHighlightedItem highlightedItem: HighlightedItem) {
         let centerConstraint = centerXAnchor.constraint(equalTo: highlightedItem.highlightedArea.centerXAnchor)
-        centerConstraint.priority = .defaultLow
+        centerConstraint.priority = superlowLayoutPriority
         bubbleConstraints = [centerConstraint]
         addHorizontalMarginConstraints()
 
         if highlightedItem.textLocation == .above {
-            bubbleConstraints.append(bottomAnchor.constraint(equalTo: anchorView.topAnchor, constant: -style.yOffsetToHighlightedArea - style.arrowSize.height))
+            bubbleConstraints.append(bottomAnchor.constraint(equalTo: highlightedItem.highlightedArea.topAnchor, constant: -style.yOffsetToHighlightedArea - style.arrowSize.height))
         } else {
-            bubbleConstraints.append(topAnchor.constraint(equalTo: anchorView.bottomAnchor, constant: style.yOffsetToHighlightedArea + style.arrowSize.height))
+            bubbleConstraints.append(topAnchor.constraint(equalTo: highlightedItem.highlightedArea.bottomAnchor, constant: style.yOffsetToHighlightedArea + style.arrowSize.height))
         }
 
         activateAllBubbleConstraints()
@@ -99,7 +99,7 @@ public class Bubble: UIView {
             }, completion: nil)
             arrowYConstraint = bottomAnchor.constraint(equalTo: arrow.topAnchor)
         }
-        arrowXConstraint = arrow.centerXAnchor.constraint(equalTo: anchorView.centerXAnchor)
+        arrowXConstraint = arrow.centerXAnchor.constraint(equalTo: highlightedItem.highlightedArea.centerXAnchor)
         activateAllArrowConstraints()
     }
 
@@ -112,7 +112,7 @@ public class Bubble: UIView {
         }
     }
 
-    var style: BubbleStyle = BubbleStyle.default {
+    private var style: BubbleStyle = BubbleStyle.default {
         didSet {
             textLabel.textColor = style.textColor
             textLabel.backgroundColor = style.backgroundColor
@@ -204,25 +204,25 @@ public class Bubble: UIView {
         arrowYConstraint?.isActive = false
     }
 
+    private func createRoundedCornerView(cornerRadius: CGFloat) -> UIView {
+        let roundedCornerView = UIView()
+        roundedCornerView.translatesAutoresizingMaskIntoConstraints = false
+        roundedCornerView.layer.cornerRadius = cornerRadius
+        roundedCornerView.layer.masksToBounds = true
+        roundedCornerView.clipsToBounds = true
+        return roundedCornerView
+    }
+
     private let minBubbleHorizontalMargin: CGFloat
     private let animationDuration: Double
 
-    private static let defaultCornerRadius: CGFloat = 12.0
-    private let roundedCornerView: UIView = {
-        let roundedCornerView = UIView()
-        roundedCornerView.translatesAutoresizingMaskIntoConstraints = false
-        roundedCornerView.layer.cornerRadius = defaultCornerRadius
-        roundedCornerView.layer.masksToBounds = true
-        roundedCornerView.clipsToBounds = true
-        roundedCornerView.backgroundColor = .green
-        return roundedCornerView
-    }()
-
-    var arrow: ArrowView!
+    private var roundedCornerView: UIView!
+    private var arrow: ArrowView!
 
     fileprivate var bubbleConstraints = [NSLayoutConstraint]()
     fileprivate var arrowXConstraint: NSLayoutConstraint?
     fileprivate var arrowYConstraint: NSLayoutConstraint?
+    private let superlowLayoutPriority = UILayoutPriority(rawValue: 1)  // Used to safeguard that our constraints doesn't affect the highlighted views
 }
 
 class ArrowView: UIView {

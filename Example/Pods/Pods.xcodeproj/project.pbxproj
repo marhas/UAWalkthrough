@@ -505,14 +505,14 @@
 		062E0E32A0302EA89A841B392D42200C /* UAWalkthrough */ = {
 			isa = PBXGroup;
 			children = (
-				5F39460023618EB400421F79 /* UIView+Autolayout.swift */,
-				5F9EBFB02033667D00B28B8C /* PaddingLabel.swift */,
-				5F9EBFB12033667D00B28B8C /* UIColor+utils.swift */,
+				5FA9B61423C4C86F00B15E8B /* Bubble.swift */,
 				5F9EBFA4203362BF00B28B8C /* DimmingViewWithHole.swift */,
-				5F9EBFA5203362BF00B28B8C /* WalkthroughVC.swift */,
+				5F9EBFB02033667D00B28B8C /* PaddingLabel.swift */,
 				034257BB42362985CD54357AEBA9BA3A /* Pod */,
 				70FA46D6249473311D8951CDD395F0FA /* Support Files */,
-				5FA9B61423C4C86F00B15E8B /* Bubble.swift */,
+				5F9EBFB12033667D00B28B8C /* UIColor+utils.swift */,
+				5F39460023618EB400421F79 /* UIView+Autolayout.swift */,
+				5F9EBFA5203362BF00B28B8C /* WalkthroughVC.swift */,
 			);
 			name = UAWalkthrough;
 			path = ../..;
