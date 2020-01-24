@@ -25,10 +25,6 @@ class WhiteStyleDemoVC: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
             self.startWalkthrough(withSettings: self.walkthroughSettings, style: self.walkthroughStyle, delegate: self, showEvenIfItHasAlreadyBeenCompleted: true)
         }
-
-        let bubbleStyle = BubbleStyle(textColor: .white, backgroundColor: .orange, shadowStyle: .dark, cornerRadius: 20, yOffsetToHighlightedArea: 2)
-        let bubbleItem = HighlightedItem(highlightedArea: button1, textLocation: .below, text: .plainText("This is a standalone bubble"))
-        let bubbleView = showBubble(withWalkthroughItem: bubbleItem, minBubbleHorizontalMargin: 20, preferredBubbleMaxLayoutWidth: 300, style: bubbleStyle)
     }
 
     @IBAction func restartWalkthrough(_ sender: Any) {
@@ -43,7 +39,7 @@ extension WhiteStyleDemoVC: WalkthroughProvider {
         let customView = createCustomView()
 
         return [
-            StandaloneItem(text: .plainText("This is a demo of UAWalkthrough. Use it to introduce your app to new users or highlight new features."), layoutHandler: { [weak self] bubble in
+            StandaloneItem(content: .plainText("This is a demo of UAWalkthrough. Use it to introduce your app to new users or highlight new features."), layoutHandler: { [weak self] bubble in
                 guard let self = self else { return nil }
                 return [
                     bubble.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
@@ -51,12 +47,12 @@ extension WhiteStyleDemoVC: WalkthroughProvider {
                 ]
             })
             ,
-            HighlightedItem(highlightedArea: slider, textLocation: .below, text: .plainText("It can be configured to progress automatically and/or require that the user taps the screen to move to the next element. This is by the way a UISlider.")),
-            HighlightedItem(highlightedArea: button1, textLocation: .below, text: .plainText("If you press this button ... nothing happens.")),
-            HighlightedItem(highlightedArea: button2, textLocation: .above, text: .attributedText(attributedString)),
-            HighlightedItem(highlightedArea: button3, textLocation: .below, text: .customView(customView)),
-            HighlightedItem(highlightedArea: button4, textLocation: .above, text: .plainText("This is the fourth and last button on this screen, and also the end of the onboarding.")),
-            StandaloneItem(text: .plainText("For more advanced usage scenarios, you can add a delegate to take action on walkthrough completion.\nThanks for your attention!"), centerOffset: CGPoint(x: 0, y: -120)),
+            HighlightedItem(highlightedArea: slider, textLocation: .below, content: .plainText("It can be configured to progress automatically and/or require that the user taps the screen to move to the next element. This is by the way a UISlider.")),
+            HighlightedItem(highlightedArea: button1, textLocation: .below, content: .plainText("If you press this button ... nothing happens.")),
+            HighlightedItem(highlightedArea: button2, textLocation: .above, content: .attributedText(attributedString)),
+            HighlightedItem(highlightedArea: button3, textLocation: .below, content: .customView(customView)),
+            HighlightedItem(highlightedArea: button4, textLocation: .above, content: .plainText("This is the fourth and last button on this screen, and also the end of the onboarding.")),
+            StandaloneItem(content: .plainText("For more advanced usage scenarios, you can add a delegate to take action on walkthrough completion.\nThanks for your attention!"), centerOffset: CGPoint(x: 0, y: -120)),
         ]
     }
 

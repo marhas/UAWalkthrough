@@ -67,11 +67,32 @@ public extension UIViewController {
     }
 
     @discardableResult
-    func showBubble(withWalkthroughItem walkthroughItem: WalkthroughItem, minBubbleHorizontalMargin: CGFloat, preferredBubbleMaxLayoutWidth: CGFloat, style: BubbleStyle = .default) -> Bubble {
+    func showBubble(withBubbleItem bubbleItem: BubbleItem,
+                    style: BubbleStyle = .default,
+                    forSeconds secondsToShowBubble: TimeInterval? = nil,
+                    minBubbleHorizontalMargin: CGFloat = 20,
+                    preferredBubbleMaxLayoutWidth: CGFloat = 300,
+                    animated: Bool = true,
+                    then doWhenBubbleRemoved: (() -> Void)? = nil) -> Bubble {
         let bubble = Bubble(preferredMaxLayoutWidth: preferredBubbleMaxLayoutWidth, minBubbleHorizontalMargin: minBubbleHorizontalMargin, animationDuration: 0, style: style)
+        bubble.transform = CGAffineTransform(scaleX: 0, y: 0)
         view.addSubview(bubble)
-        bubble.configure(withWalkthroughItem: walkthroughItem)
+        bubble.configure(withWalkthroughItem: bubbleItem)
+        let animationDuration = animated ? 0.3 : 0
+        UIView.animate(withDuration: animationDuration) {
+            bubble.transform = .identity
+        }
+        if let secondsToShowBubble = secondsToShowBubble {
+            DispatchQueue.main.asyncAfter(deadline: .now() + secondsToShowBubble) {
+                bubble.remove()
+                doWhenBubbleRemoved?()
+            }
+        }
         return bubble
+    }
+
+    func removeBubble(_ bubble: Bubble, animated: Bool = true) {
+        bubble.remove(animated: animated)
     }
 }
 
@@ -132,36 +153,6 @@ public struct WalkthroughShadowStyle {
 
     public static let dark = WalkthroughShadowStyle(offset: CGSize(width: 3, height: 4), color: .black, opacity: 0.7)
     public static let light = WalkthroughShadowStyle(offset: CGSize(width: 3, height: 4), color: .black, opacity: 0.2)
-}
-
-public struct BubbleStyle {
-    let textColor: UIColor
-    let backgroundColor: UIColor
-    let shadowStyle: WalkthroughShadowStyle?
-    let cornerRadius: CGFloat
-    let textInsets: UIEdgeInsets
-    let yOffsetToHighlightedArea: CGFloat
-    let arrowSize: CGSize
-
-    public init(textColor: UIColor = UIColor(red: 190/255, green: 210/255, blue: 229/255, alpha: 1),
-                backgroundColor: UIColor = UIColor(red: 46/255, green: 46/255, blue: 45/255, alpha: 1),
-                shadowStyle: WalkthroughShadowStyle?,
-                cornerRadius: CGFloat = 6,
-                textInsets: UIEdgeInsets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16),
-                yOffsetToHighlightedArea: CGFloat = 8,
-                arrowSize: CGSize = CGSize(width: 25, height: 16)
-                ) {
-        self.textColor = textColor
-        self.backgroundColor = backgroundColor
-        self.shadowStyle = shadowStyle
-        self.cornerRadius = cornerRadius
-        self.textInsets = textInsets
-        self.yOffsetToHighlightedArea = yOffsetToHighlightedArea
-        self.arrowSize = arrowSize
-    }
-
-    public static let `default` = BubbleStyle(textColor: .tooltipText, backgroundColor: .tooltipBackground, shadowStyle: nil)
-    public static let white = BubbleStyle(textColor: .tooltipText, backgroundColor: .white, shadowStyle: .light, cornerRadius: 6)
 }
 
 public class WalkthroughVC: UIViewController, WalkthroughController {
@@ -229,7 +220,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         backgroundDimmingView.bringSubviewToFront(bubble)
 
         // Workaround for bug with autosizing UILabel
-        showWalkthroughItem(HighlightedItem(highlightedArea: parentVC.view, textLocation: .above, text: .plainText("")), onView: parentVC.view)
+        showWalkthroughItem(HighlightedItem(highlightedArea: parentVC.view, textLocation: .above, content: .plainText("")), onView: parentVC.view)
 
         DispatchQueue.main.async {
             self.stepWalkthrough()
@@ -273,12 +264,11 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     private func showWalkthroughItem(_ walkthroughItem: WalkthroughItem, onView view: UIView) {
         deactivateAllHighlightingConstraints()
 
-        if let hightlightedItem = walkthroughItem as? HighlightedItem {
-            highlightingViewWidthConstraint = backgroundDimmingView.widthAnchor.constraint(equalTo: hightlightedItem.highlightedArea.widthAnchor, multiplier: 1, constant: settings.highlightingOffset.x)
-            highlightingViewHeightConstraint = backgroundDimmingView.heightAnchor.constraint(equalTo: hightlightedItem.highlightedArea.heightAnchor, multiplier: 1, constant: settings.highlightingOffset.y)
-
-            highlightingViewCenterXConstraint = backgroundDimmingView.centerXAnchor.constraint(equalTo: hightlightedItem.highlightedArea.centerXAnchor)
-            highlightingViewCenterYConstraint = backgroundDimmingView.centerYAnchor.constraint(equalTo: hightlightedItem.highlightedArea.centerYAnchor)
+        if let hightlightedItem = walkthroughItem as? HighlightedItem, case let HighlightedItem.HighlightedArea.view(highlightedView) = hightlightedItem.highlightedArea {
+            highlightingViewWidthConstraint = backgroundDimmingView.widthAnchor.constraint(equalTo: highlightedView.widthAnchor, multiplier: 1, constant: settings.highlightingOffset.x)
+            highlightingViewHeightConstraint = backgroundDimmingView.heightAnchor.constraint(equalTo: highlightedView.heightAnchor, multiplier: 1, constant: settings.highlightingOffset.y)
+            highlightingViewCenterXConstraint = backgroundDimmingView.centerXAnchor.constraint(equalTo: highlightedView.centerXAnchor)
+            highlightingViewCenterYConstraint = backgroundDimmingView.centerYAnchor.constraint(equalTo: highlightedView.centerYAnchor)
         } else {
             // This is to make the hole in the dimming view disappear in a controlled fashion
             highlightingViewHeightConstraint = backgroundDimmingView.heightAnchor.constraint(equalToConstant: 0)
@@ -326,6 +316,10 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     private let tapGestureRecognizer = UITapGestureRecognizer()
 }
 
+public typealias BubbleItem = WalkthroughItem
+public typealias StandaloneBubbleItem = StandaloneItem
+public typealias HighlightedBubbleItem = HighlightedItem
+
 public protocol WalkthroughItem {
     var content: Content { get set }
 }
@@ -333,20 +327,20 @@ public protocol WalkthroughItem {
 public struct StandaloneItem: WalkthroughItem {
     public typealias LayoutHandler = (UIView) -> [NSLayoutConstraint]?
 
-    public init(text: Content, centerOffset: CGPoint = CGPoint.zero) {
-        self.content = text
+    public init(content: Content, centerOffset: CGPoint = CGPoint.zero) {
+        self.content = content
         self.centerOffset = centerOffset
         layoutHandler = nil
     }
 
-    public init(text: Content, layoutHandler: LayoutHandler? = nil) {
-        self.content = text
+    public init(content: Content, layoutHandler: LayoutHandler? = nil) {
+        self.content = content
         self.layoutHandler = layoutHandler
         centerOffset = nil
     }
 
-    public init(text: Content) {
-        self.content = text
+    public init(content: Content) {
+        self.content = content
         self.layoutHandler = nil
         centerOffset = CGPoint.zero
     }
@@ -357,18 +351,33 @@ public struct StandaloneItem: WalkthroughItem {
 }
 
 public struct HighlightedItem: WalkthroughItem {
-    public init(highlightedArea: UIView, textLocation: TextLocation, text: Content) {
-        self.highlightedArea = highlightedArea
+    public init(highlightedArea: UIView, textLocation: TextLocation = .above, content: Content) {
+        self.highlightedArea = HighlightedArea.view(highlightedArea)
         self.textLocation = textLocation
-        self.content = text
+        self.content = content
     }
 
-    public var highlightedArea: UIView
+    public init(highlightedArea: CGRect, textLocation: TextLocation = .above, content: Content) {
+        self.highlightedArea = HighlightedArea.rect(highlightedArea)
+        self.textLocation = textLocation
+        self.content = content
+    }
+
+    public init(highlightedArea: CGPoint, textLocation: TextLocation = .above, content: Content) {
+        self.init(highlightedArea: CGRect(origin: highlightedArea, size: CGSize.zero), textLocation: textLocation, content: content)
+    }
+
+    var highlightedArea: HighlightedArea
     public var textLocation: TextLocation
     public var content: Content
 
     public enum TextLocation {
         case above, below
+    }
+
+    enum HighlightedArea {
+        case view(UIView)
+        case rect(CGRect)
     }
 }
 

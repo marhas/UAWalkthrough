@@ -45,9 +45,9 @@ extension MyViewController: WalkthroughProvider {
     var walkthroughItems: [WalkthroughItem] {
         return [
             StandaloneItem(text: .plainText("This is a walkthrough of The App"),
-            HighlightedItem(highlightedArea: actionButton1, textLocation: .below, text: .plainText("This button makes the app go BOOM.")),
-            HighlightedItem(highlightedArea: slider, textLocation: .above, text: .plainText("Here's a slider for you.")),
-            StandaloneItem(centerOffset: CGPoint(x: 0, y: -120), text: .plainText("That marks the end of the onboarding. Have fun!")),
+            HighlightedItem(highlightedArea: actionButton1, textLocation: .below, content: .plainText("This button makes the app go BOOM.")),
+            HighlightedItem(highlightedArea: slider, textLocation: .above, content: .plainText("Here's a slider for you.")),
+            StandaloneItem(centerOffset: CGPoint(x: 0, y: -120), content: .plainText("That marks the end of the onboarding. Have fun!")),
         ]
     }
 }

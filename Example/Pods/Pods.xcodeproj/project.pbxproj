@@ -66,7 +66,7 @@
 		5F9EBFAC2033634700B28B8C /* DimmingViewWithHole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9EBFA4203362BF00B28B8C /* DimmingViewWithHole.swift */; };
 		5F9EBFB420338EA500B28B8C /* UIColor+utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9EBFB12033667D00B28B8C /* UIColor+utils.swift */; };
 		5F9EBFB520338EB400B28B8C /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9EBFB02033667D00B28B8C /* PaddingLabel.swift */; };
-		5FA9B61623C4C94900B15E8B /* Bubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA9B61423C4C86F00B15E8B /* Bubble.swift */; };
+		5FDC206423C724D200DE0BF6 /* Bubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC206223C724C900DE0BF6 /* Bubble.swift */; };
 		6236BE5FA5B5B8A0B39104A94F3CD782 /* HaveValidSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3612030462D107BF373B18930C54AA8 /* HaveValidSnapshot.swift */; };
 		62D26CE7BA3AEDB4E5E87218FDCBBA90 /* Functional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CA3B9C2A51D7AADB8F4C6DCF48EDA4 /* Functional.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		62E86B6809F2EDBE69E78A89AC5E1966 /* SuiteHooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73732D2BDBC248B39BBFEBDAD9697F1A /* SuiteHooks.swift */; };
@@ -303,7 +303,7 @@
 		5F9EBFA5203362BF00B28B8C /* WalkthroughVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalkthroughVC.swift; path = UAWalkthrough/Classes/WalkthroughVC.swift; sourceTree = "<group>"; };
 		5F9EBFB02033667D00B28B8C /* PaddingLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaddingLabel.swift; path = UAWalkthrough/Classes/PaddingLabel.swift; sourceTree = "<group>"; };
 		5F9EBFB12033667D00B28B8C /* UIColor+utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIColor+utils.swift"; path = "UAWalkthrough/Classes/UIColor+utils.swift"; sourceTree = "<group>"; };
-		5FA9B61423C4C86F00B15E8B /* Bubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bubble.swift; sourceTree = "<group>"; };
+		5FDC206223C724C900DE0BF6 /* Bubble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Bubble.swift; path = UAWalkthrough/Classes/Bubble.swift; sourceTree = "<group>"; };
 		61E7D7F94796C8273534EBD4E460E922 /* XCTestObservationCenter+CurrentTestCaseTracker.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "XCTestObservationCenter+CurrentTestCaseTracker.h"; sourceTree = "<group>"; };
 		62F3724885AEE3A9FD220E7F2DE0CC84 /* DSL+Wait.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "DSL+Wait.swift"; path = "Sources/Nimble/DSL+Wait.swift"; sourceTree = "<group>"; };
 		63105B920EC55A2CC7444F7E0FAE8401 /* CwlBadInstructionException.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CwlBadInstructionException.swift; path = Carthage/Checkouts/CwlPreconditionTesting/Sources/CwlPreconditionTesting/CwlBadInstructionException.swift; sourceTree = "<group>"; };
@@ -505,7 +505,7 @@
 		062E0E32A0302EA89A841B392D42200C /* UAWalkthrough */ = {
 			isa = PBXGroup;
 			children = (
-				5FA9B61423C4C86F00B15E8B /* Bubble.swift */,
+				5FDC206223C724C900DE0BF6 /* Bubble.swift */,
 				5F9EBFA4203362BF00B28B8C /* DimmingViewWithHole.swift */,
 				5F9EBFB02033667D00B28B8C /* PaddingLabel.swift */,
 				034257BB42362985CD54357AEBA9BA3A /* Pod */,
@@ -1250,7 +1250,7 @@
 				5F7BC8FD236322C2005274E6 /* UIView+Autolayout.swift in Sources */,
 				5F9EBFB520338EB400B28B8C /* PaddingLabel.swift in Sources */,
 				5F9EBFAB2033634100B28B8C /* WalkthroughVC.swift in Sources */,
-				5FA9B61623C4C94900B15E8B /* Bubble.swift in Sources */,
+				5FDC206423C724D200DE0BF6 /* Bubble.swift in Sources */,
 				39F884CCEB6EEB51B988429010B806FB /* UAWalkthrough-dummy.m in Sources */,
 				5F9EBFB420338EA500B28B8C /* UIColor+utils.swift in Sources */,
 			);

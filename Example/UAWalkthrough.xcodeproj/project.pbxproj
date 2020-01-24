@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		24D7DC1718BAFFD7091D7837 /* Pods_UAWalkthrough_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 099CE8B41F0AD03D5C417FBE /* Pods_UAWalkthrough_Example.framework */; };
+		5F02ABDD23C873DA00B335E0 /* BubblesDemoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F02ABDC23C873DA00B335E0 /* BubblesDemoVC.swift */; };
 		5F3945FD235F37E600421F79 /* DefaultStyleDemoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F3945FC235F37E600421F79 /* DefaultStyleDemoVC.swift */; };
 		5FBEEFC02343780600F3E285 /* UAWalkthrough_ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBEEFBF2343780600F3E285 /* UAWalkthrough_ExampleTests.swift */; };
 		5FDECDCB2379542B00179371 /* CustomWalkthroughProviderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDECDCA2379542A00179371 /* CustomWalkthroughProviderVC.swift */; };
@@ -33,6 +34,7 @@
 		218F8D5BD5B9526A986DEED4 /* Pods-UAWalkthrough_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UAWalkthrough_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UAWalkthrough_Tests/Pods-UAWalkthrough_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		24668621DE3E872E6EB7D178 /* UAWalkthrough.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = UAWalkthrough.podspec; path = ../UAWalkthrough.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		5A07E64EF69B40890A6D189B /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		5F02ABDC23C873DA00B335E0 /* BubblesDemoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubblesDemoVC.swift; sourceTree = "<group>"; };
 		5F3945FC235F37E600421F79 /* DefaultStyleDemoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultStyleDemoVC.swift; sourceTree = "<group>"; };
 		5FBEEFBD2343780600F3E285 /* UAWalkthrough_ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UAWalkthrough_ExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FBEEFBF2343780600F3E285 /* UAWalkthrough_ExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UAWalkthrough_ExampleTests.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
+				5F02ABDC23C873DA00B335E0 /* BubblesDemoVC.swift */,
 				5FDECDCA2379542A00179371 /* CustomWalkthroughProviderVC.swift */,
 				5F3945FC235F37E600421F79 /* DefaultStyleDemoVC.swift */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
@@ -330,6 +333,7 @@
 				5FDECDCB2379542B00179371 /* CustomWalkthroughProviderVC.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				5F3945FD235F37E600421F79 /* DefaultStyleDemoVC.swift in Sources */,
+				5F02ABDD23C873DA00B335E0 /* BubblesDemoVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -18,13 +18,17 @@ class DefaultStyleDemoVC: UIViewController {
     @IBOutlet weak var button3: UIButton!
     @IBOutlet weak var button4: UIButton!
 
+    private let walkthroughSettings = WalkthroughSettings(automaticWalkthroughDelaySeconds: 3, preferredBubbleMaxLayoutWidth: 300, presentationMode: .dimAndHighlight())
+    private let bubbleStyle = BubbleStyle.default
 
     override func viewDidAppear(_ animated: Bool) {
-        let walkthroughSettings = WalkthroughSettings(automaticWalkthroughDelaySeconds: 3, preferredBubbleMaxLayoutWidth: 300, presentationMode: .dimAndHighlight())
-
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
-            self.startWalkthrough(withSettings: walkthroughSettings, style: BubbleStyle.default, delegate: self, showEvenIfItHasAlreadyBeenCompleted: true)
+            self.startWalkthrough(withSettings: self.walkthroughSettings, style: self.bubbleStyle, delegate: self, showEvenIfItHasAlreadyBeenCompleted: true)
         }
+    }
+
+    @IBAction func restartWalkthrough(_ sender: Any) {
+        self.startWalkthrough(withSettings: walkthroughSettings, style: bubbleStyle)
     }
 }
 
@@ -34,25 +38,25 @@ extension DefaultStyleDemoVC: WalkthroughProvider {
         attributedString.append(NSAttributedString(string: "For example some bold text.", attributes: [.font: UIFont.systemFont(ofSize: 17, weight: .bold)]))
 
         return [
-            StandaloneItem(text: .plainText("It can also dim the background and highlight views for extra focus."), layoutHandler: { [weak self] bubble in
+            StandaloneItem(content: .plainText("The background can be dimmed and views highlighted for extra focus."), layoutHandler: { [weak self] bubble in
                 guard let self = self else { return nil }
                 return [
                     bubble.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
                     bubble.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 90)
                 ]
             }),
-            HighlightedItem(highlightedArea: button4, textLocation: .above, text: .plainText("Views can be walked through in any order. This is button 4.")),
-            HighlightedItem(highlightedArea: slider, textLocation: .below, text: .plainText("There are a few preconfigured appearances but there's plenty of opportunity to configure it to your liking. (Here's the slider again)")),
-            HighlightedItem(highlightedArea: button1, textLocation: .below, text: .plainText("Here's another button.")),
-            HighlightedItem(highlightedArea: button2, textLocation: .below, text: .plainText("This is yet another button. As long as the walkthrough runs the regular UI of the app is disabled. Tap the background to progress the walkthrough.")),
-            HighlightedItem(highlightedArea: button3, textLocation: .above, text: .attributedText(attributedString)),
-            StandaloneItem(text: .plainText("This example uses a delegate to automatically switch tab when the walkthrough completes."), centerOffset: CGPoint(x: 0, y: -120)),
+            HighlightedItem(highlightedArea: button4, textLocation: .above, content: .plainText("Views can be walked through in any order. This is button 4.")),
+            HighlightedItem(highlightedArea: slider, textLocation: .below, content: .plainText("There are a few preconfigured appearances but there's plenty of opportunity to configure it to your liking. (Here's the slider again)")),
+            HighlightedItem(highlightedArea: button1, textLocation: .below, content: .plainText("Here's another button.")),
+            HighlightedItem(highlightedArea: button2, textLocation: .below, content: .plainText("This is yet another button. As long as the walkthrough runs the regular UI of the app is disabled. Tap the background to progress the walkthrough.")),
+            HighlightedItem(highlightedArea: button3, textLocation: .above, content: .attributedText(attributedString)),
+            StandaloneItem(content: .plainText("This example uses a delegate to automatically switch tab when the walkthrough completes."), centerOffset: CGPoint(x: 0, y: -120)),
         ]
     }
 }
 
 extension DefaultStyleDemoVC: WalkthroughDelegate {
     func walkthroughCompleted() {
-        self.tabBarController?.selectedIndex = 0
+        self.tabBarController?.selectedIndex = 2
     }
 }

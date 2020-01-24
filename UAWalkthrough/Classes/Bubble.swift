@@ -1,11 +1,41 @@
 //
 //  Bubble.swift
-//  FBSnapshotTestCase
+//  UAWalkthrough
 //
 //  Created by Marcel Hasselaar on 2020-01-07.
 //
 
 import UIKit
+
+public struct BubbleStyle {
+    let textColor: UIColor
+    let backgroundColor: UIColor
+    let shadowStyle: WalkthroughShadowStyle?
+    let cornerRadius: CGFloat
+    let textInsets: UIEdgeInsets
+    let yOffsetToHighlightedArea: CGFloat
+    let arrowSize: CGSize
+
+    public init(textColor: UIColor = UIColor(red: 190/255, green: 210/255, blue: 229/255, alpha: 1),
+                backgroundColor: UIColor = UIColor(red: 46/255, green: 46/255, blue: 45/255, alpha: 1),
+                shadowStyle: WalkthroughShadowStyle? = nil,
+                cornerRadius: CGFloat = 6,
+                textInsets: UIEdgeInsets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16),
+                yOffsetToHighlightedArea: CGFloat = 8,
+                arrowSize: CGSize = CGSize(width: 25, height: 16)
+                ) {
+        self.textColor = textColor
+        self.backgroundColor = backgroundColor
+        self.shadowStyle = shadowStyle
+        self.cornerRadius = cornerRadius
+        self.textInsets = textInsets
+        self.yOffsetToHighlightedArea = yOffsetToHighlightedArea
+        self.arrowSize = arrowSize
+    }
+
+    public static let `default` = BubbleStyle(textColor: .tooltipText, backgroundColor: .tooltipBackground, shadowStyle: nil)
+    public static let white = BubbleStyle(textColor: .tooltipText, backgroundColor: .white, shadowStyle: .light, cornerRadius: 6)
+}
 
 public class Bubble: UIView {
 
@@ -29,6 +59,15 @@ public class Bubble: UIView {
         backgroundColor = .clear
 
         defer { self.style = style }
+    }
+
+    public func remove(animated: Bool = true) {
+        let animationDuration = animated ? 0.3 : 0
+        UIView.animate(withDuration: animationDuration, animations: {
+            self.transform = CGAffineTransform(scaleX: 0.000000001, y: 0.000000001)
+        }) { _ in
+            self.removeFromSuperview()
+        }
     }
 
     func configure(withWalkthroughItem walkthroughItem: WalkthroughItem) {
@@ -67,25 +106,38 @@ public class Bubble: UIView {
     }
 
     private func configure(withHighlightedItem highlightedItem: HighlightedItem) {
-        let centerConstraint = centerXAnchor.constraint(equalTo: highlightedItem.highlightedArea.centerXAnchor)
-        centerConstraint.priority = superlowLayoutPriority
-        bubbleConstraints = [centerConstraint]
-        addHorizontalMarginConstraints()
-
-        if highlightedItem.textLocation == .above {
-            bubbleConstraints.append(bottomAnchor.constraint(equalTo: highlightedItem.highlightedArea.topAnchor, constant: -style.yOffsetToHighlightedArea - style.arrowSize.height))
-        } else {
-            bubbleConstraints.append(topAnchor.constraint(equalTo: highlightedItem.highlightedArea.bottomAnchor, constant: style.yOffsetToHighlightedArea + style.arrowSize.height))
+        switch highlightedItem.highlightedArea {
+        case .view(let highlightedView):
+            let centerConstraint = centerXAnchor.constraint(equalTo: highlightedView.centerXAnchor)
+            centerConstraint.priority = superlowLayoutPriority
+            bubbleConstraints = [centerConstraint]
+            if highlightedItem.textLocation == .above {
+                bubbleConstraints.append(bottomAnchor.constraint(equalTo: highlightedView.topAnchor, constant: -style.yOffsetToHighlightedArea - style.arrowSize.height))
+            } else {
+                bubbleConstraints.append(topAnchor.constraint(equalTo: highlightedView.bottomAnchor, constant: style.yOffsetToHighlightedArea + style.arrowSize.height))
+            }
+            arrowXConstraint = arrow.centerXAnchor.constraint(equalTo: highlightedView.centerXAnchor)
+        case .rect(let highlightedRect):
+            guard let outerView = outerView else { break }
+            let centerConstraint = centerXAnchor.constraint(equalTo: outerView.leftAnchor, constant: highlightedRect.midX)
+            centerConstraint.priority = superlowLayoutPriority
+            bubbleConstraints = [centerConstraint]
+            if highlightedItem.textLocation == .above {
+                bubbleConstraints.append(bottomAnchor.constraint(equalTo: outerView.topAnchor, constant: highlightedRect.origin.y - style.yOffsetToHighlightedArea - style.arrowSize.height))
+            } else {
+                bubbleConstraints.append(topAnchor.constraint(equalTo: outerView.topAnchor, constant: highlightedRect.origin.y + highlightedRect.size.height + style.yOffsetToHighlightedArea + style.arrowSize.height))
+            }
+            arrowXConstraint = arrow.centerXAnchor.constraint(equalTo: outerView.leftAnchor, constant: highlightedRect.midX)
         }
 
+        addHorizontalMarginConstraints()
         activateAllBubbleConstraints()
-
         deactivateAllArrowConstraints()
 
         arrow.isHidden = false
 
         // By rotating the arrow exactly at the middle of the animation should have it rotated while not visible.
-        // Using a arrow larger than then bubble will still look weird though as it will not be completely hidden during rotation.
+        // Using an arrow larger than the bubble will still look weird though as it will not be completely hidden during rotation.
         let rotationAnimationDuration = animationDuration / 2 + 0.0000001
         let rotationAnimationDelay = rotationAnimationDuration / 2
         if highlightedItem.textLocation == .below {
@@ -99,7 +151,6 @@ public class Bubble: UIView {
             }, completion: nil)
             arrowYConstraint = bottomAnchor.constraint(equalTo: arrow.topAnchor)
         }
-        arrowXConstraint = arrow.centerXAnchor.constraint(equalTo: highlightedItem.highlightedArea.centerXAnchor)
         activateAllArrowConstraints()
     }
 
@@ -140,6 +191,7 @@ public class Bubble: UIView {
         self.customView = customView
         customView.bound(inside: roundedCornerView)
         textLabel.isHidden = true
+        // This transition could definitely be polished
         UIView.animate(withDuration: 0.001) {
             customView.layoutIfNeeded()
             self.roundedCornerView.layoutIfNeeded()
