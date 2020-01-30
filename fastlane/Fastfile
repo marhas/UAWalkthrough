@@ -6,7 +6,6 @@ import_from_git(
 default_platform(:ios)
 
 ENV["podspec"] = "UAWalkthrough.podspec"
-ENV["repo"] = "UnbadPods"
 ENV["xcodeproj"] = "Example/UAWalkthrough.xcodeproj"
 
 platform :ios do

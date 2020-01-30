@@ -18,7 +18,7 @@ class DefaultStyleDemoVC: UIViewController {
     @IBOutlet weak var button3: UIButton!
     @IBOutlet weak var button4: UIButton!
 
-    private let walkthroughSettings = WalkthroughSettings(automaticWalkthroughDelaySeconds: 3, preferredBubbleMaxLayoutWidth: 300, presentationMode: .dimAndHighlight())
+    private let walkthroughSettings = WalkthroughSettings(automaticWalkthroughDelaySeconds: 3, preferredBubbleMaxLayoutWidth: 300, presentationMode: .dim())
     private let bubbleStyle = BubbleStyle.default
 
     override func viewDidAppear(_ animated: Bool) {

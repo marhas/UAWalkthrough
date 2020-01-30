@@ -97,8 +97,4 @@ public class DimmingViewWithHole: UIView {
     override public func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         return true
     }
-    
-    override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        return self
-    }
 }

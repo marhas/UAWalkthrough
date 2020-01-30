@@ -174,6 +174,9 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
 
         guard let parentVC = parent else { return }
 
+        parentVC.view.addSubview(view)
+        view.bound(inside: parentVC.view, considerSafeArea: false)
+
         if let walkthroughProvider = parent as? WalkthroughProvider {
             self.weaklyRetainedWalkthroughProvider = walkthroughProvider
         }
@@ -194,29 +197,25 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         switch settings.presentationMode {
         case .dimAndHighlight(let dimmingColor, let dimmingLevel):
             backgroundDimmingView = DimmingViewWithHole(frame: .zero, dimmingColor: dimmingColor, dimmingAlpha: dimmingLevel)
-            parentVC.view.addSubview(backgroundDimmingView)
+            view.addSubview(backgroundDimmingView)
             backgroundDimmingView.translatesAutoresizingMaskIntoConstraints = false
             highlightingViewWidthConstraint = backgroundDimmingView.widthAnchor.constraint(equalTo: parentVC.view.widthAnchor)
             highlightingViewHeightConstraint = backgroundDimmingView.heightAnchor.constraint(equalTo: parentVC.view.heightAnchor)
             highlightingViewCenterXConstraint = backgroundDimmingView.centerXAnchor.constraint(equalTo: parentVC.view.centerXAnchor)
             highlightingViewCenterYConstraint = backgroundDimmingView.centerYAnchor.constraint(equalTo: parentVC.view.centerYAnchor)
+            animateBackgroundDimming(backgroundDimmingView: backgroundDimmingView)
         case .dim(let dimmingColor, let dimmingLevel):
             backgroundDimmingView = UIView()
+            backgroundDimmingView.translatesAutoresizingMaskIntoConstraints = false
             backgroundDimmingView.backgroundColor = dimmingColor.withAlphaComponent(dimmingLevel)
-            parentVC.view.addSubview(backgroundDimmingView)
-            backgroundDimmingView.bound(inside: parentVC.view, considerSafeArea: false)
+            view.addSubview(backgroundDimmingView)
+            backgroundDimmingView.bound(inside: view, considerSafeArea: false)
+            animateBackgroundDimming(backgroundDimmingView: backgroundDimmingView)
         case .none:
-            backgroundDimmingView = UIView()
-            backgroundDimmingView.backgroundColor = .clear
-            parentVC.view.addSubview(backgroundDimmingView)
-            backgroundDimmingView.bound(inside: parentVC.view, considerSafeArea: false)
+            backgroundDimmingView = view
         }
-        backgroundDimmingView.alpha = 0
-        UIView.animate(withDuration: 0.5) {
-            self.backgroundDimmingView.alpha = 1
-        }
-
-        backgroundDimmingView.addGestureRecognizer(tapGestureRecognizer)
+        view.addGestureRecognizer(tapGestureRecognizer)
+        view.backgroundColor = .clear
         backgroundDimmingView.bringSubviewToFront(bubble)
 
         // Workaround for bug with autosizing UILabel
@@ -232,7 +231,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     }
 
     public func dismissWalkthrough() {
-        backgroundDimmingView.removeGestureRecognizer(tapGestureRecognizer)
+        view.removeGestureRecognizer(tapGestureRecognizer)
         backgroundDimmingView.removeFromSuperview()
         removeFromParent()
         walkthroughDelegate?.walkthroughCompleted()
@@ -260,7 +259,14 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         showWalkthroughItem(walkthroughProvider.walkthroughItems[currentWalkthroughItemIndex], onView: parentVC.view)
         currentWalkthroughItemIndex += 1
     }
-    
+
+    private func animateBackgroundDimming(backgroundDimmingView: UIView) {
+        backgroundDimmingView.alpha = 0
+        UIView.animate(withDuration: 0.5) {
+            self.backgroundDimmingView.alpha = 1
+        }
+    }
+
     private func showWalkthroughItem(_ walkthroughItem: WalkthroughItem, onView view: UIView) {
         deactivateAllHighlightingConstraints()
 

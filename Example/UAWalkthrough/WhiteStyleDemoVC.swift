@@ -18,7 +18,7 @@ class WhiteStyleDemoVC: UIViewController {
     @IBOutlet weak var button3: UIButton!
     @IBOutlet weak var button4: UIButton!
 
-    var walkthroughSettings = WalkthroughSettings(automaticWalkthroughDelaySeconds: 3, preferredBubbleMaxLayoutWidth: 300, presentationMode: .none)
+    var walkthroughSettings = WalkthroughSettings(preferredBubbleMaxLayoutWidth: 300, presentationMode: .dimAndHighlight())
     var walkthroughStyle = BubbleStyle.white
 
     override func viewDidAppear(_ animated: Bool) {
@@ -76,7 +76,25 @@ extension WhiteStyleDemoVC: WalkthroughProvider {
         label.bound(inside: customView)
         customView.widthAnchor.constraint(equalToConstant: 250).isActive = true
         customView.heightAnchor.constraint(equalToConstant: 120).isActive = true
+
+        // Swallow taps on the custom view to make it easier to tap its button. Otherwise it would step the walkthrough if you miss the button and tap on the custom view itself.
+        customView.addGestureRecognizer(UITapGestureRecognizer())
+
+        let button = UIButton(type: .roundedRect)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        customView.addSubview(button)
+        button.addTarget(self, action: #selector(customViewButtonTapped), for: .touchUpInside)
+        button.centerXAnchor.constraint(equalTo: customView.centerXAnchor).isActive = true
+        button.bottomAnchor.constraint(equalTo: customView.bottomAnchor, constant: -5).isActive = true
+        button.widthAnchor.constraint(equalTo: customView.widthAnchor, multiplier: 0.8).isActive = true
+        button.heightAnchor.constraint(equalTo: customView.heightAnchor, multiplier: 0.3).isActive = true
+        button.setTitle("Click me if you can", for: .normal)
         return customView
+    }
+
+    @objc
+    private func customViewButtonTapped(_ sender: Any) {
+        print("Button in custom view tapped")
     }
 
     private func createAutolayoutView(withBackgroundColor backgroundColor: UIColor? = UIColor.clear) -> UIView {
