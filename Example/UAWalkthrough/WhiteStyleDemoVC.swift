@@ -108,6 +108,7 @@ extension WhiteStyleDemoVC: WalkthroughProvider {
 extension WhiteStyleDemoVC: WalkthroughDelegate {
     func walkthroughCompleted() {
         self.tabBarController?.selectedIndex = 1
+        print("White style demo VC completed.")
     }
 }
 

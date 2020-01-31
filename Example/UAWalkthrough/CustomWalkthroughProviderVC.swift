@@ -25,7 +25,9 @@ class CustomWalkthroughProviderVC: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
-            self.startWalkthrough(withWalkthroughProvider: self.walkthroughProvider, settings: self.walkthroughSettings, style: BubbleStyle.default, delegate: self)
+            self.startWalkthrough(withWalkthroughProvider: self.walkthroughProvider, settings: self.walkthroughSettings, style: BubbleStyle.default, delegate: self) {
+                print("Walkthrough with custom provider completed")
+            }
         }
     }
 

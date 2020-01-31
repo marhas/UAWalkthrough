@@ -8,7 +8,7 @@
 import UIKit
 
 public protocol WalkthroughController {
-    func dismissWalkthrough()
+    func dismissCompletedWalkthrough()
 }
 
 public protocol WalkthroughProvider: class {
@@ -230,12 +230,18 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         dismissWalkthrough()
     }
 
-    public func dismissWalkthrough() {
+    public func dismissCompletedWalkthrough() {
+        dismissWalkthrough()
+        walkthroughDelegate?.walkthroughCompleted()
+        walkthroughDelegate = nil
+        completion?()
+        completion = nil
+    }
+
+    private func dismissWalkthrough() {
         view.removeGestureRecognizer(tapGestureRecognizer)
         backgroundDimmingView.removeFromSuperview()
         removeFromParent()
-        walkthroughDelegate?.walkthroughCompleted()
-        completion?()
     }
 
     fileprivate func configure(settings: WalkthroughSettings, style: BubbleStyle, delegate: WalkthroughDelegate?, completion: (() -> Void)?) {
@@ -250,7 +256,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         stepWalkthroughTimer?.invalidate()
         guard let walkthroughProvider = walkthroughProvider, let parentVC = parent, currentWalkthroughItemIndex < walkthroughProvider.walkthroughItems.count else {
             self.walkthroughProvider?.hasCompletedWalkthrough = true
-            dismissWalkthrough()
+            dismissCompletedWalkthrough()
             return
         }
         if let delay = settings.automaticWalkthroughDelaySeconds {
