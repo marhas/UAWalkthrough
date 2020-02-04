@@ -8,6 +8,7 @@
 import UIKit
 
 public protocol WalkthroughController {
+    func stepWalkthrough()
     func dismissCompletedWalkthrough()
 }
 
@@ -129,8 +130,7 @@ public struct WalkthroughSettings {
          automaticWalkthroughDelaySeconds: Int? = nil,
          minLabelHorizontalMargin: CGFloat = 10,
          preferredBubbleMaxLayoutWidth: CGFloat? = nil,
-         presentationMode: PresentationMode = .dimAndHighlight()
-         ) {
+         presentationMode: PresentationMode = .dimAndHighlight()) {
         self.stepAnimationDuration = stepAnimationDuration
         self.highlightingOffset = highlightingOffset
         self.automaticWalkthroughDelaySeconds = automaticWalkthroughDelaySeconds
@@ -190,7 +190,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
             return
         }
         
-        tapGestureRecognizer.addTarget(self, action: #selector(stepWalkthrough))
+        tapGestureRecognizer.addTarget(self, action: #selector(progressWalkthroughIfAllowed))
 
         deactivateAllHighlightingConstraints()
 
@@ -230,6 +230,20 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         dismissWalkthrough()
     }
 
+    public func stepWalkthrough() {
+        currentWalkthroughItemIndex += 1
+        stepWalkthroughTimer?.invalidate()
+        guard let walkthroughProvider = walkthroughProvider, let parentVC = parent, currentWalkthroughItemIndex < walkthroughProvider.walkthroughItems.count else {
+            self.walkthroughProvider?.hasCompletedWalkthrough = true
+            dismissCompletedWalkthrough()
+            return
+        }
+        if let delay = settings.automaticWalkthroughDelaySeconds {
+            stepWalkthroughTimer = Timer.scheduledTimer(timeInterval: TimeInterval(delay), target: self, selector: #selector(progressWalkthroughIfAllowed), userInfo: nil, repeats: false)
+        }
+        showWalkthroughItem(walkthroughProvider.walkthroughItems[currentWalkthroughItemIndex], onView: parentVC.view)
+    }
+
     public func dismissCompletedWalkthrough() {
         dismissWalkthrough()
         walkthroughDelegate?.walkthroughCompleted()
@@ -252,18 +266,9 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         bubble = Bubble(preferredMaxLayoutWidth: settings.preferredBubbleMaxLayoutWidth, minBubbleHorizontalMargin: settings.minBubbleHorizontalMargin, animationDuration: settings.stepAnimationDuration, style: style)
     }
 
-    @objc private func stepWalkthrough() {
-        stepWalkthroughTimer?.invalidate()
-        guard let walkthroughProvider = walkthroughProvider, let parentVC = parent, currentWalkthroughItemIndex < walkthroughProvider.walkthroughItems.count else {
-            self.walkthroughProvider?.hasCompletedWalkthrough = true
-            dismissCompletedWalkthrough()
-            return
-        }
-        if let delay = settings.automaticWalkthroughDelaySeconds {
-            stepWalkthroughTimer = Timer.scheduledTimer(timeInterval: TimeInterval(delay), target: self, selector: #selector(stepWalkthrough), userInfo: nil, repeats: false)
-        }
-        showWalkthroughItem(walkthroughProvider.walkthroughItems[currentWalkthroughItemIndex], onView: parentVC.view)
-        currentWalkthroughItemIndex += 1
+    @objc private func progressWalkthroughIfAllowed() {
+        guard let walkthroughProvider = walkthroughProvider, !walkthroughProvider.walkthroughItems[currentWalkthroughItemIndex].needsInteraction else { return }
+        stepWalkthrough()
     }
 
     private func animateBackgroundDimming(backgroundDimmingView: UIView) {
@@ -324,7 +329,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
     fileprivate var backgroundDimmingView: UIView!
 
     private var bubble: Bubble!
-    private var currentWalkthroughItemIndex = 0
+    private var currentWalkthroughItemIndex = -1
     private let tapGestureRecognizer = UITapGestureRecognizer()
 }
 
@@ -334,54 +339,58 @@ public typealias HighlightedBubbleItem = HighlightedItem
 
 public protocol WalkthroughItem {
     var content: Content { get set }
+    var needsInteraction: Bool { get }
 }
 
 public struct StandaloneItem: WalkthroughItem {
     public typealias LayoutHandler = (UIView) -> [NSLayoutConstraint]?
 
-    public init(content: Content, centerOffset: CGPoint = CGPoint.zero) {
+    public init(content: Content, centerOffset: CGPoint = CGPoint.zero, needsInteraction: Bool = false) {
         self.content = content
         self.centerOffset = centerOffset
+        self.needsInteraction = needsInteraction
         layoutHandler = nil
     }
 
-    public init(content: Content, layoutHandler: LayoutHandler? = nil) {
+    public init(content: Content, layoutHandler: LayoutHandler? = nil, needsInteraction: Bool = false) {
         self.content = content
         self.layoutHandler = layoutHandler
+        self.needsInteraction = needsInteraction
         centerOffset = nil
     }
 
-    public init(content: Content) {
+    public init(content: Content, needsInteraction: Bool = false) {
         self.content = content
+        self.needsInteraction = needsInteraction
         self.layoutHandler = nil
         centerOffset = CGPoint.zero
     }
 
     public var centerOffset: CGPoint?
     public var content: Content
+    public let needsInteraction: Bool
     let layoutHandler: LayoutHandler?
 }
 
 public struct HighlightedItem: WalkthroughItem {
-    public init(highlightedArea: UIView, textLocation: TextLocation = .above, content: Content) {
+    public init(highlightedArea: UIView, textLocation: TextLocation = .above, content: Content, needsInteraction: Bool = false) {
         self.highlightedArea = HighlightedArea.view(highlightedArea)
         self.textLocation = textLocation
         self.content = content
+        self.needsInteraction = needsInteraction
     }
 
-    public init(highlightedArea: CGRect, textLocation: TextLocation = .above, content: Content) {
+    public init(highlightedArea: CGRect, textLocation: TextLocation = .above, content: Content, needsInteraction: Bool = false) {
         self.highlightedArea = HighlightedArea.rect(highlightedArea)
         self.textLocation = textLocation
         self.content = content
-    }
-
-    public init(highlightedArea: CGPoint, textLocation: TextLocation = .above, content: Content) {
-        self.init(highlightedArea: CGRect(origin: highlightedArea, size: CGSize.zero), textLocation: textLocation, content: content)
+        self.needsInteraction = needsInteraction
     }
 
     var highlightedArea: HighlightedArea
     public var textLocation: TextLocation
     public var content: Content
+    public let needsInteraction: Bool
 
     public enum TextLocation {
         case above, below

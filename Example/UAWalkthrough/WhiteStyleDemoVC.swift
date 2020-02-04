@@ -20,10 +20,11 @@ class WhiteStyleDemoVC: UIViewController {
 
     var walkthroughSettings = WalkthroughSettings(preferredBubbleMaxLayoutWidth: 300, presentationMode: .dimAndHighlight())
     var walkthroughStyle = BubbleStyle.white
+    fileprivate var walkthroughController: WalkthroughController?
 
     override func viewDidAppear(_ animated: Bool) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
-            self.startWalkthrough(withSettings: self.walkthroughSettings, style: self.walkthroughStyle, delegate: self, showEvenIfItHasAlreadyBeenCompleted: true)
+            self.walkthroughController = self.startWalkthrough(withSettings: self.walkthroughSettings, style: self.walkthroughStyle, delegate: self, showEvenIfItHasAlreadyBeenCompleted: true)
         }
     }
 
@@ -50,7 +51,7 @@ extension WhiteStyleDemoVC: WalkthroughProvider {
             HighlightedItem(highlightedArea: slider, textLocation: .below, content: .plainText("It can be configured to progress automatically and/or require that the user taps the screen to move to the next element. This is by the way a UISlider.")),
             HighlightedItem(highlightedArea: button1, textLocation: .below, content: .plainText("If you press this button ... nothing happens.")),
             HighlightedItem(highlightedArea: button2, textLocation: .above, content: .attributedText(attributedString)),
-            HighlightedItem(highlightedArea: button3, textLocation: .below, content: .customView(customView)),
+            HighlightedItem(highlightedArea: button3, textLocation: .below, content: .customView(customView), needsInteraction: true),
             HighlightedItem(highlightedArea: button4, textLocation: .above, content: .plainText("This is the fourth and last button on this screen, and also the end of the onboarding.")),
             StandaloneItem(content: .plainText("For more advanced usage scenarios, you can add a delegate to take action on walkthrough completion.\nThanks for your attention!"), centerOffset: CGPoint(x: 0, y: -120)),
         ]
@@ -95,6 +96,7 @@ extension WhiteStyleDemoVC: WalkthroughProvider {
     @objc
     private func customViewButtonTapped(_ sender: Any) {
         print("Button in custom view tapped")
+        walkthroughController?.stepWalkthrough()
     }
 
     private func createAutolayoutView(withBackgroundColor backgroundColor: UIColor? = UIColor.clear) -> UIView {
