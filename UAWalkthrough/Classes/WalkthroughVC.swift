@@ -189,7 +189,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
             assert(false, "The WalkthroughProvider doesn't have any walkthrough items so there's nothing for me to do.")
             return
         }
-        
+
         tapGestureRecognizer.addTarget(self, action: #selector(progressWalkthroughIfAllowed))
 
         deactivateAllHighlightingConstraints()
@@ -250,6 +250,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         walkthroughDelegate = nil
         completion?()
         completion = nil
+        view.removeFromSuperview()
     }
 
     private func dismissWalkthrough() {
@@ -312,7 +313,7 @@ public class WalkthroughVC: UIViewController, WalkthroughController {
         guard case .dimAndHighlight = settings.presentationMode else { return }
         NSLayoutConstraint.activate([highlightingViewWidthConstraint, highlightingViewHeightConstraint, highlightingViewCenterXConstraint, highlightingViewCenterYConstraint].compactMap { $0 })
     }
-    
+
     private func deactivateAllHighlightingConstraints() {
         guard case .dimAndHighlight = settings.presentationMode else { return }
         NSLayoutConstraint.deactivate([highlightingViewWidthConstraint, highlightingViewHeightConstraint, highlightingViewCenterXConstraint, highlightingViewCenterYConstraint].compactMap { $0 })
