@@ -12,10 +12,15 @@ Install _fastlane_ using
 ```
 [sudo] gem install fastlane -NV
 ```
-or alternatively using `brew cask install fastlane`
+or alternatively using `brew install fastlane`
 
 # Available Actions
 ## iOS
+### ios show_project_version
+```
+fastlane ios show_project_version
+```
+Displays the current project version number
 ### ios show_podspec_version
 ```
 fastlane ios show_podspec_version
@@ -25,7 +30,12 @@ Displays the podspec version number.
 ```
 fastlane ios bump_project_version
 ```
-Bumps the project version number. Defaults to bumping the patch number, use 'type:minor' or 'type:major' to override, or set explicitly with version:x.y.z
+Bumps the project version number. Defaults to bumping the patch number, use 'type:minor' or 'type:major' to override. Use version parameter to set the version number explicitly, eg: version:12.1.2. If version parameter is used, type is ignored.
+### ios update_build_number
+```
+fastlane ios update_build_number
+```
+
 ### ios bump_podspec
 ```
 fastlane ios bump_podspec
@@ -49,6 +59,6 @@ fastlane ios push_pod
 
 ----
 
-This README.md is auto-generated and will be re-generated every time [fastlane](https://fastlane.tools) is run.
+This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
 More information about fastlane can be found on [fastlane.tools](https://fastlane.tools).
 The documentation of fastlane can be found on [docs.fastlane.tools](https://docs.fastlane.tools).
