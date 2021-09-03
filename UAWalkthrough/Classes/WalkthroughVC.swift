@@ -67,6 +67,23 @@ public extension UIViewController {
         return walkthroughVC
     }
 
+    func removeBubble(_ bubble: Bubble, animated: Bool = true) {
+        bubble.remove(animated: animated)
+    }
+
+    func showBubble(withBubbleItem bubbleItem: BubbleItem,
+                    style: BubbleStyle = .default,
+                    forSeconds secondsToShowBubble: TimeInterval? = nil,
+                    minBubbleHorizontalMargin: CGFloat = 20,
+                    preferredBubbleMaxLayoutWidth: CGFloat = 300,
+                    animated: Bool = true,
+                    then doWhenBubbleRemoved: (() -> Void)? = nil) -> Bubble {
+        view.showBubble(withBubbleItem: bubbleItem, style: style, forSeconds: secondsToShowBubble, minBubbleHorizontalMargin: minBubbleHorizontalMargin, preferredBubbleMaxLayoutWidth: preferredBubbleMaxLayoutWidth, animated: animated, then: doWhenBubbleRemoved)
+    }
+}
+
+public extension UIView {
+
     @discardableResult
     func showBubble(withBubbleItem bubbleItem: BubbleItem,
                     style: BubbleStyle = .default,
@@ -77,7 +94,7 @@ public extension UIViewController {
                     then doWhenBubbleRemoved: (() -> Void)? = nil) -> Bubble {
         let bubble = Bubble(preferredMaxLayoutWidth: preferredBubbleMaxLayoutWidth, minBubbleHorizontalMargin: minBubbleHorizontalMargin, animationDuration: 0, style: style)
         bubble.transform = CGAffineTransform(scaleX: 0, y: 0)
-        view.addSubview(bubble)
+        addSubview(bubble)
         bubble.configure(withWalkthroughItem: bubbleItem)
         let animationDuration = animated ? 0.3 : 0
         UIView.animate(withDuration: animationDuration) {
@@ -90,10 +107,6 @@ public extension UIViewController {
             }
         }
         return bubble
-    }
-
-    func removeBubble(_ bubble: Bubble, animated: Bool = true) {
-        bubble.remove(animated: animated)
     }
 }
 

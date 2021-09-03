@@ -247,11 +247,20 @@ public class Bubble: UIView {
     }
 
     private func activateAllArrowConstraints() {
+        let leadingConstraint = arrow.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: style.cornerRadius)
+        leadingConstraint.priority = superlowLayoutPriority
+        let trailingConstraint = arrow.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -style.cornerRadius)
+        trailingConstraint.priority = superlowLayoutPriority
+        keepArrowWithinBubbleConstraints = [leadingConstraint, trailingConstraint]
+        NSLayoutConstraint.activate(keepArrowWithinBubbleConstraints)
+
+        arrowXConstraint?.priority = superlowLayoutPriority
         arrowXConstraint?.isActive = true
         arrowYConstraint?.isActive = true
     }
 
     private func deactivateAllArrowConstraints() {
+        NSLayoutConstraint.deactivate(keepArrowWithinBubbleConstraints)
         arrowXConstraint?.isActive = false
         arrowYConstraint?.isActive = false
     }
@@ -273,6 +282,7 @@ public class Bubble: UIView {
 
     fileprivate var bubbleConstraints = [NSLayoutConstraint]()
     fileprivate var arrowXConstraint: NSLayoutConstraint?
+    fileprivate var keepArrowWithinBubbleConstraints = [NSLayoutConstraint]()
     fileprivate var arrowYConstraint: NSLayoutConstraint?
     private let superlowLayoutPriority = UILayoutPriority(rawValue: 1)  // Used to safeguard that our constraints doesn't affect the highlighted views
 }
