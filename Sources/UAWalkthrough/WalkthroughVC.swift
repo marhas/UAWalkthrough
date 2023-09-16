@@ -12,11 +12,11 @@ public protocol WalkthroughController {
     func dismissCompletedWalkthrough()
 }
 
-public protocol WalkthroughProvider: class {
+public protocol WalkthroughProvider: AnyObject {
     var walkthroughItems: [WalkthroughItem] { get }
 }
 
-private class DefaultWalkthoughProvider: WalkthroughProvider {
+private class DefaultWalkthroughProvider: WalkthroughProvider {
     let walkthroughItems: [WalkthroughItem]
 
     init(walkthroughItems: [WalkthroughItem]) {
@@ -60,7 +60,7 @@ public extension UIViewController {
 
         let walkthroughVC = WalkthroughVC()
         walkthroughVC.configure(settings: settings, style: style, delegate: delegate, completion: completion)
-        walkthroughVC.stronglyRetainedWalkthroughProvider = DefaultWalkthoughProvider(walkthroughItems: walkthroughItems)
+        walkthroughVC.stronglyRetainedWalkthroughProvider = DefaultWalkthroughProvider(walkthroughItems: walkthroughItems)
 
         addChild(walkthroughVC)
         walkthroughVC.didMove(toParent: self)
@@ -422,6 +422,6 @@ public enum Content {
     case customView(UIView)
 }
 
-public protocol WalkthroughDelegate: class {
+public protocol WalkthroughDelegate: AnyObject {
     func walkthroughCompleted()
 }
