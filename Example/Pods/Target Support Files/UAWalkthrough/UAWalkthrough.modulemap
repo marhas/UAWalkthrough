@@ -1,6 +1,0 @@
-framework module UAWalkthrough {
-  umbrella header "UAWalkthrough-umbrella.h"
-
-  export *
-  module * { export * }
-}

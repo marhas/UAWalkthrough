@@ -55,7 +55,7 @@ public class Bubble: UIView {
         }
         roundedCornerView = createRoundedCornerView(cornerRadius: style.cornerRadius)
         addSubview(roundedCornerView)
-        roundedCornerView.bound(inside: self)
+        roundedCornerView.bound(inside: self, considerSafeArea: false)
         backgroundColor = .clear
 
         defer { self.style = style }
@@ -108,7 +108,7 @@ public class Bubble: UIView {
     private func configure(withHighlightedItem highlightedItem: HighlightedItem) {
         switch highlightedItem.highlightedArea {
         case .view(let highlightedView):
-            let centerConstraint = centerXAnchor.constraint(equalTo: highlightedView.centerXAnchor)
+            let centerConstraint = centerXAnchor.constraint(equalTo: highlightedView.centerXAnchor, constant: 80)
             centerConstraint.priority = superlowLayoutPriority
             bubbleConstraints = [centerConstraint]
             if highlightedItem.textLocation == .above {
@@ -203,7 +203,7 @@ public class Bubble: UIView {
         customView = nil
         if textLabel.superview == nil {
             roundedCornerView.addSubview(textLabel)
-            textLabel.bound(inside: self)
+            textLabel.bound(inside: self, considerSafeArea: false)
         }
         if case .plainText(let plainText) = textContent {
             textLabel.text = plainText
