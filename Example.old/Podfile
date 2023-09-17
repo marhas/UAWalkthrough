@@ -1,5 +1,0 @@
-use_frameworks!
-
-target 'UAWalkthrough_Example' do
-  pod 'UAWalkthrough', :path => '../'
-end
