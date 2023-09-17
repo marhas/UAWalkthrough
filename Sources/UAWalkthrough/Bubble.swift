@@ -108,7 +108,7 @@ public class Bubble: UIView {
     private func configure(withHighlightedItem highlightedItem: HighlightedItem) {
         switch highlightedItem.highlightedArea {
         case .view(let highlightedView):
-            let centerConstraint = centerXAnchor.constraint(equalTo: highlightedView.centerXAnchor, constant: 80)
+            let centerConstraint = centerXAnchor.constraint(equalTo: highlightedView.centerXAnchor)
             centerConstraint.priority = superlowLayoutPriority
             bubbleConstraints = [centerConstraint]
             if highlightedItem.textLocation == .above {

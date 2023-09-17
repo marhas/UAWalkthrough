@@ -46,7 +46,7 @@ extension DefaultStyleDemoVC: WalkthroughProvider {
                     bubble.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 90)
                 ]
             }),
-            HighlightedItem(highlightedArea: button4, textLocation: .above, content: .plainText("Använd snabbmätning för att mäta din puls på kortast möjliga tid. Så fort mätningen är tillförlitlig så kommer resultatet att presenteras 123456.")),
+            HighlightedItem(highlightedArea: button4, textLocation: .above, content: .plainText("Views can be walked through in any order. This is button 4.")),
             HighlightedItem(highlightedArea: slider, textLocation: .below, content: .plainText("There are a few preconfigured appearances but there's plenty of opportunity to configure it to your liking. (Here's the slider again)")),
             HighlightedItem(highlightedArea: button1, textLocation: .below, content: .plainText("Here's another button.")),
             HighlightedItem(highlightedArea: button2, textLocation: .below, content: .plainText("This is yet another button. As long as the walkthrough runs the regular UI of the app is disabled. Tap the background to progress the walkthrough.")),

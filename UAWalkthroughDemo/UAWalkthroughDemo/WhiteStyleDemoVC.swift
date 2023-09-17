@@ -51,7 +51,7 @@ extension WhiteStyleDemoVC: WalkthroughProvider {
             HighlightedItem(highlightedArea: slider, textLocation: .below, content: .plainText("It can be configured to progress automatically and/or require that the user taps the screen to move to the next element. This is by the way a UISlider.")),
             HighlightedItem(highlightedArea: button1, textLocation: .below, content: .plainText("If you press this button ... nothing happens.")),
             HighlightedItem(highlightedArea: button2, textLocation: .above, content: .attributedText(attributedString)),
-            HighlightedItem(highlightedArea: button3, textLocation: .below, content: .customView(customView), needsInteraction: true),
+            HighlightedItem(highlightedArea: button3, textLocation: .above, content: .customView(customView), needsInteraction: true),
             HighlightedItem(highlightedArea: button4, textLocation: .above, content: .plainText("This is the fourth and last button on this screen, and also the end of the onboarding.")),
             StandaloneItem(content: .plainText("For more advanced usage scenarios, you can add a delegate to take action on walkthrough completion.\nThanks for your attention!"), centerOffset: CGPoint(x: 0, y: -120)),
         ]
@@ -72,7 +72,8 @@ extension WhiteStyleDemoVC: WalkthroughProvider {
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
-        label.text = "You can even put a custom views in a bubble like this."
+        label.textAlignment = .center
+        label.text = "You can even put a custom view in a bubble like this."
         customView.addSubview(label)
         label.bound(inside: customView)
         customView.widthAnchor.constraint(equalToConstant: 250).isActive = true
@@ -89,7 +90,7 @@ extension WhiteStyleDemoVC: WalkthroughProvider {
         button.bottomAnchor.constraint(equalTo: customView.bottomAnchor, constant: -5).isActive = true
         button.widthAnchor.constraint(equalTo: customView.widthAnchor, multiplier: 0.8).isActive = true
         button.heightAnchor.constraint(equalTo: customView.heightAnchor, multiplier: 0.3).isActive = true
-        button.setTitle("Click me if you can", for: .normal)
+        button.setTitle("Tap here to continue", for: .normal)
         return customView
     }
 
